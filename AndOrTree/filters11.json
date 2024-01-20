@@ -1,0 +1,38 @@
+
+{
+    "campaignId":"campaignId1",
+    "primaryCondition": {
+        "included_filters": {
+            "filterOperator": "or",
+            "filters": [
+                {
+                    "action_name": "Primary1",
+                    "executed": true,
+                    "filter_type": "actions",
+                    "execution": {
+                        "count": 1,
+                        "type": "atleast"
+                    },
+                    "attributes": {
+                        "filterOperator": "and",
+                        "filters": []
+                    }
+                },
+                {
+                    "action_name": "Primary2",
+                    "executed": true,
+                    "filter_type": "actions",
+                    "execution": {
+                        "count": 1,
+                        "type": "atleast"
+                    },
+                    "attributes": {
+                        "filterOperator": "and",
+                        "filters": []
+                    }
+                }
+            ]
+        }
+    }
+}
+

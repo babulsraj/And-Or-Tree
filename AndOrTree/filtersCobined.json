@@ -1,0 +1,240 @@
+[
+    {
+    "campaignId":"campaignId1",
+    "primaryCondition": {
+        "included_filters": {
+            "filterOperator": "or",
+            "filters": [
+                {
+                    "action_name": "Primary1",
+                    "executed": true,
+                    "filter_type": "actions",
+                    "execution": {
+                        "count": 1,
+                        "type": "atleast"
+                    },
+                    "attributes": {
+                        "filterOperator": "and",
+                        "filters": []
+                    }
+                },
+                {
+                    "action_name": "Primary2",
+                    "executed": true,
+                    "filter_type": "actions",
+                    "execution": {
+                        "count": 1,
+                        "type": "atleast"
+                    },
+                    "attributes": {
+                        "filterOperator": "and",
+                        "filters": []
+                    }
+                }
+            ]
+        }
+    },
+    "secondaryCondition": {
+        "included_filters": {
+            "filterOperator": "or",
+            "filters": [
+                {
+                    "filterOperator": "and",
+                    "filter_type": "nested_filters",
+                    "filters": [
+                        {
+                            "action_name": "Secondary1",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filterOperator": "and",
+                                "filters": []
+                            }
+                        },
+                        {
+                            "action_name": "Secondary2",
+                            "executed": false,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 0,
+                                "type": "exactly"
+                            },
+                            "primary_time_range": {
+                                "type": "inTheLast",
+                                "value": 3,
+                                "value_type": "relative_past",
+                                "period_unit": "days"
+                            },
+                            "attributes": {
+                                "filterOperator": "and",
+                                "filters": []
+                            }
+                        }
+                    ]
+                },
+                {
+                    "filterOperator": "and",
+                    "filter_type": "nested_filters",
+                    "filters": [
+                        {
+                            "action_name": "Secondary3",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filterOperator": "and",
+                                "filters": []
+                            }
+                        },
+                        {
+                            "action_name": "Secondary4",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "primary_time_range": {
+                                "type": "inTheLast",
+                                "value": 3,
+                                "value_type": "relative_past",
+                                "period_unit": "days"
+                            },
+                            "attributes": {
+                                "filterOperator": "and",
+                                "filters": []
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+},
+    {
+    "campaignId":"campaignId2",
+    "primaryCondition": {
+        "included_filters": {
+            "filterOperator": "or",
+            "filters": [
+                {
+                    "action_name": "Primary1",
+                    "executed": true,
+                    "filter_type": "actions",
+                    "execution": {
+                        "count": 1,
+                        "type": "atleast"
+                    },
+                    "attributes": {
+                        "filterOperator": "and",
+                        "filters": []
+                    }
+                },
+                {
+                    "action_name": "Primary2",
+                    "executed": true,
+                    "filter_type": "actions",
+                    "execution": {
+                        "count": 1,
+                        "type": "atleast"
+                    },
+                    "attributes": {
+                        "filterOperator": "and",
+                        "filters": []
+                    }
+                }
+            ]
+        }
+    },
+    "secondaryCondition": {
+        "included_filters": {
+            "filterOperator": "and",
+            "filters": [
+                {
+                    "filterOperator": "or",
+                    "filter_type": "nested_filters",
+                    "filters": [
+                        {
+                            "action_name": "Secondary1",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filterOperator": "and",
+                                "filters": []
+                            }
+                        },
+                        {
+                            "action_name": "Secondary2",
+                            "executed": false,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 0,
+                                "type": "exactly"
+                            },
+                            "primary_time_range": {
+                                "type": "inTheLast",
+                                "value": 3,
+                                "value_type": "relative_past",
+                                "period_unit": "days"
+                            },
+                            "attributes": {
+                                "filterOperator": "and",
+                                "filters": []
+                            }
+                        }
+                    ]
+                },
+                {
+                    "filterOperator": "or",
+                    "filter_type": "nested_filters",
+                    "filters": [
+                        {
+                            "action_name": "Secondary3",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filterOperator": "and",
+                                "filters": []
+                            }
+                        },
+                        {
+                            "action_name": "Secondary4",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "primary_time_range": {
+                                "type": "inTheLast",
+                                "value": 3,
+                                "value_type": "relative_past",
+                                "period_unit": "days"
+                            },
+                            "attributes": {
+                                "filterOperator": "and",
+                                "filters": []
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+]
