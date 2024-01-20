@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C0022FC12B2B82A7005629AA /* Evaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0022FC02B2B82A7005629AA /* Evaluator.swift */; };
+		C0022FC32B2B82C4005629AA /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0022FC22B2B82C4005629AA /* Path.swift */; };
+		C0022FE42B2B8E70005629AA /* filtersOR.json in Resources */ = {isa = PBXBuildFile; fileRef = C0022FE32B2B8E70005629AA /* filtersOR.json */; };
+		C05ACE6A2B361627008E0F4B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05ACE692B361627008E0F4B /* Utils.swift */; };
 		C06CE70F2B1B43FB0026CAFC /* AndOrTreeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06CE70E2B1B43FB0026CAFC /* AndOrTreeApp.swift */; };
 		C06CE7112B1B43FB0026CAFC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06CE7102B1B43FB0026CAFC /* ContentView.swift */; };
 		C06CE7132B1B43FD0026CAFC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C06CE7122B1B43FD0026CAFC /* Assets.xcassets */; };
@@ -14,6 +18,22 @@
 		C06CE7202B1B43FD0026CAFC /* AndOrTreeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06CE71F2B1B43FD0026CAFC /* AndOrTreeTests.swift */; };
 		C06CE72A2B1B43FD0026CAFC /* AndOrTreeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06CE7292B1B43FD0026CAFC /* AndOrTreeUITests.swift */; };
 		C06CE72C2B1B43FD0026CAFC /* AndOrTreeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06CE72B2B1B43FD0026CAFC /* AndOrTreeUITestsLaunchTests.swift */; };
+		C06CE7392B1B442B0026CAFC /* Logic.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06CE7382B1B442B0026CAFC /* Logic.swift */; };
+		C06CE73B2B1B45380026CAFC /* filters.json in Resources */ = {isa = PBXBuildFile; fileRef = C06CE73A2B1B45370026CAFC /* filters.json */; };
+		C06CE73F2B1B50580026CAFC /* filters1.json in Resources */ = {isa = PBXBuildFile; fileRef = C06CE73E2B1B50570026CAFC /* filters1.json */; };
+		C07ED7392B4D627E0027AA67 /* filters11.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7382B4D627E0027AA67 /* filters11.json */; };
+		C07ED7B72B53C46F0027AA67 /* filtersAND.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7B62B53C46F0027AA67 /* filtersAND.json */; };
+		C07ED7B92B53CD820027AA67 /* filtersCobined.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7B82B53CD820027AA67 /* filtersCobined.json */; };
+		C07ED7BB2B53E71B0027AA67 /* filtersCobinedHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7BA2B53E71B0027AA67 /* filtersCobinedHNE.json */; };
+		C07ED7BD2B53F9A70027AA67 /* filtersANDHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7BC2B53F9A70027AA67 /* filtersANDHNE.json */; };
+		C07ED7BF2B548DAC0027AA67 /* filtersORHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7BE2B548DAB0027AA67 /* filtersORHNE.json */; };
+		D61DE4FE2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE4FD2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */; };
+		D61DE5002B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE4FF2B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */; };
+		D61DE5022B55459B001AD764 /* MoEngageTriggerPathBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE5012B55459B001AD764 /* MoEngageTriggerPathBuilder.swift */; };
+		D61DE5042B5545C5001AD764 /* MoEngageCampaignPathsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE5032B5545C5001AD764 /* MoEngageCampaignPathsHandler.swift */; };
+		D61DE5442B594DF1001AD764 /* NewFilter.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5432B594DF1001AD764 /* NewFilter.json */; };
+		D61DE5472B5B198A001AD764 /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5462B5B198A001AD764 /* test.json */; };
+		D61DE5492B5B2FDD001AD764 /* Combined.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5482B5B2FDD001AD764 /* Combined.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +54,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C0022FC02B2B82A7005629AA /* Evaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Evaluator.swift; sourceTree = "<group>"; };
+		C0022FC22B2B82C4005629AA /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
+		C0022FE32B2B8E70005629AA /* filtersOR.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersOR.json; path = AndOrTree/filtersOR.json; sourceTree = SOURCE_ROOT; };
+		C05ACE692B361627008E0F4B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		C06CE70B2B1B43FB0026CAFC /* AndOrTree.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndOrTree.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C06CE70E2B1B43FB0026CAFC /* AndOrTreeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndOrTreeApp.swift; sourceTree = "<group>"; };
 		C06CE7102B1B43FB0026CAFC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,6 +68,23 @@
 		C06CE7252B1B43FD0026CAFC /* AndOrTreeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AndOrTreeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C06CE7292B1B43FD0026CAFC /* AndOrTreeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndOrTreeUITests.swift; sourceTree = "<group>"; };
 		C06CE72B2B1B43FD0026CAFC /* AndOrTreeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndOrTreeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C06CE7382B1B442B0026CAFC /* Logic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic.swift; sourceTree = "<group>"; };
+		C06CE73A2B1B45370026CAFC /* filters.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = filters.json; sourceTree = "<group>"; };
+		C06CE73E2B1B50570026CAFC /* filters1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = filters1.json; sourceTree = "<group>"; };
+		C07ED7382B4D627E0027AA67 /* filters11.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filters11.json; path = AndOrTree/filters11.json; sourceTree = SOURCE_ROOT; };
+		C07ED7B62B53C46F0027AA67 /* filtersAND.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersAND.json; path = AndOrTree/filtersAND.json; sourceTree = SOURCE_ROOT; };
+		C07ED7B82B53CD820027AA67 /* filtersCobined.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersCobined.json; path = AndOrTree/filtersCobined.json; sourceTree = SOURCE_ROOT; };
+		C07ED7BA2B53E71B0027AA67 /* filtersCobinedHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersCobinedHNE.json; path = AndOrTree/filtersCobinedHNE.json; sourceTree = SOURCE_ROOT; };
+		C07ED7BC2B53F9A70027AA67 /* filtersANDHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersANDHNE.json; path = AndOrTree/filtersANDHNE.json; sourceTree = SOURCE_ROOT; };
+		C07ED7BE2B548DAB0027AA67 /* filtersORHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersORHNE.json; path = AndOrTree/filtersORHNE.json; sourceTree = SOURCE_ROOT; };
+		D61DE4FD2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageTriggerEvaluatorInteractor.swift; sourceTree = "<group>"; };
+		D61DE4FF2B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageTriggerEvaluatorInteractor.swift; sourceTree = "<group>"; };
+		D61DE5012B55459B001AD764 /* MoEngageTriggerPathBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageTriggerPathBuilder.swift; sourceTree = "<group>"; };
+		D61DE5032B5545C5001AD764 /* MoEngageCampaignPathsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageCampaignPathsHandler.swift; sourceTree = "<group>"; };
+		D61DE5432B594DF1001AD764 /* NewFilter.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = NewFilter.json; path = AndOrTree/NewFilter.json; sourceTree = SOURCE_ROOT; };
+		D61DE5462B5B198A001AD764 /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = test.json; path = AndOrTree/test.json; sourceTree = SOURCE_ROOT; };
+		D61DE5482B5B2FDD001AD764 /* Combined.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = Combined.json; path = AndOrTree/Combined.json; sourceTree = SOURCE_ROOT; };
+		D61DE54A2B5BEF70001AD764 /* AndOrTree.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AndOrTree.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +115,7 @@
 		C06CE7022B1B43FB0026CAFC = {
 			isa = PBXGroup;
 			children = (
+				D61DE54A2B5BEF70001AD764 /* AndOrTree.xctestplan */,
 				C06CE70D2B1B43FB0026CAFC /* AndOrTree */,
 				C06CE71E2B1B43FD0026CAFC /* AndOrTreeTests */,
 				C06CE7282B1B43FD0026CAFC /* AndOrTreeUITests */,
@@ -94,9 +136,18 @@
 		C06CE70D2B1B43FB0026CAFC /* AndOrTree */ = {
 			isa = PBXGroup;
 			children = (
-				C06CE70E2B1B43FB0026CAFC /* AndOrTreeApp.swift */,
+				C0022FC02B2B82A7005629AA /* Evaluator.swift */,
+				D61DE5032B5545C5001AD764 /* MoEngageCampaignPathsHandler.swift */,
+				D61DE5012B55459B001AD764 /* MoEngageTriggerPathBuilder.swift */,
+				D61DE4FD2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */,
+				C0022FC22B2B82C4005629AA /* Path.swift */,
+				C05ACE692B361627008E0F4B /* Utils.swift */,
 				C06CE7102B1B43FB0026CAFC /* ContentView.swift */,
+				C06CE7382B1B442B0026CAFC /* Logic.swift */,
+				C06CE70E2B1B43FB0026CAFC /* AndOrTreeApp.swift */,
 				C06CE7122B1B43FD0026CAFC /* Assets.xcassets */,
+				C06CE73A2B1B45370026CAFC /* filters.json */,
+				C06CE73E2B1B50570026CAFC /* filters1.json */,
 				C06CE7142B1B43FD0026CAFC /* Preview Content */,
 			);
 			path = AndOrTree;
@@ -113,7 +164,18 @@
 		C06CE71E2B1B43FD0026CAFC /* AndOrTreeTests */ = {
 			isa = PBXGroup;
 			children = (
+				D61DE5482B5B2FDD001AD764 /* Combined.json */,
+				D61DE5462B5B198A001AD764 /* test.json */,
+				D61DE5432B594DF1001AD764 /* NewFilter.json */,
+				C07ED7BC2B53F9A70027AA67 /* filtersANDHNE.json */,
+				C07ED7BA2B53E71B0027AA67 /* filtersCobinedHNE.json */,
+				C07ED7B82B53CD820027AA67 /* filtersCobined.json */,
+				C07ED7B62B53C46F0027AA67 /* filtersAND.json */,
+				C07ED7382B4D627E0027AA67 /* filters11.json */,
+				C0022FE32B2B8E70005629AA /* filtersOR.json */,
+				C07ED7BE2B548DAB0027AA67 /* filtersORHNE.json */,
 				C06CE71F2B1B43FD0026CAFC /* AndOrTreeTests.swift */,
+				D61DE4FF2B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */,
 			);
 			path = AndOrTreeTests;
 			sourceTree = "<group>";
@@ -231,8 +293,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C06CE73B2B1B45380026CAFC /* filters.json in Resources */,
 				C06CE7162B1B43FD0026CAFC /* Preview Assets.xcassets in Resources */,
 				C06CE7132B1B43FD0026CAFC /* Assets.xcassets in Resources */,
+				C06CE73F2B1B50580026CAFC /* filters1.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +304,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D61DE5492B5B2FDD001AD764 /* Combined.json in Resources */,
+				C07ED7B92B53CD820027AA67 /* filtersCobined.json in Resources */,
+				C07ED7BF2B548DAC0027AA67 /* filtersORHNE.json in Resources */,
+				C0022FE42B2B8E70005629AA /* filtersOR.json in Resources */,
+				C07ED7BB2B53E71B0027AA67 /* filtersCobinedHNE.json in Resources */,
+				C07ED7B72B53C46F0027AA67 /* filtersAND.json in Resources */,
+				C07ED7392B4D627E0027AA67 /* filters11.json in Resources */,
+				D61DE5442B594DF1001AD764 /* NewFilter.json in Resources */,
+				C07ED7BD2B53F9A70027AA67 /* filtersANDHNE.json in Resources */,
+				D61DE5472B5B198A001AD764 /* test.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +332,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C06CE7112B1B43FB0026CAFC /* ContentView.swift in Sources */,
+				C0022FC12B2B82A7005629AA /* Evaluator.swift in Sources */,
+				C06CE7392B1B442B0026CAFC /* Logic.swift in Sources */,
+				D61DE5042B5545C5001AD764 /* MoEngageCampaignPathsHandler.swift in Sources */,
+				C0022FC32B2B82C4005629AA /* Path.swift in Sources */,
+				D61DE5022B55459B001AD764 /* MoEngageTriggerPathBuilder.swift in Sources */,
 				C06CE70F2B1B43FB0026CAFC /* AndOrTreeApp.swift in Sources */,
+				D61DE4FE2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift in Sources */,
+				C05ACE6A2B361627008E0F4B /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D61DE5002B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift in Sources */,
 				C06CE7202B1B43FD0026CAFC /* AndOrTreeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

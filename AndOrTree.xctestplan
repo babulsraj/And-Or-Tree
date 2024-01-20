@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "E173DF89-A8B9-4859-B208-33A27900217B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:AndOrTree.xcodeproj",
+      "identifier" : "C06CE70A2B1B43FB0026CAFC",
+      "name" : "AndOrTree"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:AndOrTree.xcodeproj",
+        "identifier" : "C06CE71A2B1B43FD0026CAFC",
+        "name" : "AndOrTreeTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:AndOrTree.xcodeproj",
+        "identifier" : "C06CE7242B1B43FD0026CAFC",
+        "name" : "AndOrTreeUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
