@@ -30,7 +30,7 @@ class BabulCampaignPathsHandler {
             campainPath.path = path!
             campainPath.allowedTimeDuration = 3
             campainPath.timeProvider = ActualTimeProvider()
-            campainPath.onTimeExpeiryOfHasNotExcecutedEvent = { campaignId in
+            campainPath.onTimeExpiryOfHasNotExecutedEvent = { campaignId in
                 // evaluate the path progress
                 if campainPath.isPathCompleted(isReset: true) {
                     self.delegate?.didFinishTriggerConditionValidation(for: campainPath.campaignId, with: .success(TriggerConditionValidationResult(campaignIds: [campainPath.campaignId])))
@@ -66,7 +66,7 @@ class BabulCampaignPathsHandler {
         // let paths = self.campaignPaths.filter {$0.allNodes.contains(event)}
 
         for path in paths {
-            if path.isEeventMatching(with: event), path.isPathCompleted() {
+            if path.isEventMatching(with: event), path.isPathCompleted() {
                 if ids == nil {
                     ids = []
                 }
