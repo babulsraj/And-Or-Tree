@@ -1,6 +1,6 @@
 [
     {
-    "campaignId":"campaignId1",
+    "campaignId":"campaignIdStoring1",
     "primaryCondition": {
         "included_filters": {
             "filterOperator": "or",
@@ -119,7 +119,7 @@
     }
 },
     {
-    "campaignId":"campaignId2",
+    "campaignId":"campaignIdStoring2",
     "primaryCondition": {
         "included_filters": {
             "filterOperator": "or",

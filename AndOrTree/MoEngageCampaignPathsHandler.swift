@@ -20,8 +20,6 @@ class BabulCampaignPathsHandler {
             let campainPath = BabulCampaignPath(campaignId: campaign["campaignId"] as?  String ?? "", expiry: campaign["expiery"] as? Double ?? 0.0, allowedTimeDuration: campaign["limit"] as? Double ?? 0.0)
             
             pathBuilder.onCreationOfNode = { [weak self] node in
-                campainPath.allNodes.insert(node)
-                
                 (node.conditionType == .primary) ?
                 self?.primaryEvents[node.eventName, default:[]].append(campainPath.campaignId):
                 self?.secondaryEvents[node.eventName, default:[]].append(campainPath.campaignId)

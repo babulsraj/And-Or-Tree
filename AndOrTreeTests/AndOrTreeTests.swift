@@ -50,10 +50,12 @@ final class AndOrTreeTests: XCTestCase {
             let id1 = sut.evaluateConditions(for: "Primary2", attributes: [:])
             let id2 = sut.evaluateConditions(for: "Secondary4", attributes: [:])
             let id3 =  sut.evaluateConditions(for: "Secondary1", attributes: [:])
+            let id4 =  sut.evaluateConditions(for: "Secondary1", attributes: [:])
       
             XCTAssertNil(id1)
             XCTAssertNil(id2)
             XCTAssertEqual(id3,["campaignId1"])
+            XCTAssertNil(id4) // Path gets reset after completion
            
         } else {
             throw NSError()
@@ -100,7 +102,7 @@ final class AndOrTreeTests: XCTestCase {
             throw NSError()
         }
     }
-    
+    // 1||2||3
     // 1&1&2&3&4
     func testPathEvaluationOnlyANDandOR () throws {
         
@@ -117,7 +119,7 @@ final class AndOrTreeTests: XCTestCase {
             let id4 =  sut.evaluateConditions(for: "Secondary3", attributes: [:])
             let id5 =  sut.evaluateConditions(for: "Secondary4", attributes: [:])
       
-            XCTAssertNil(id1)
+            XCTAssertEqual(id1,["onlyOR"]) // first path will again get satisfied here
             XCTAssertNil(id2)
             XCTAssertNil(id3)
             XCTAssertNil(id4)
@@ -134,7 +136,7 @@ final class AndOrTreeTests: XCTestCase {
         
         if let json = parseJson(fileName: "Combined")  {
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
-            let pp = sut.createCampaignPaths(for: json)
+            let _ = sut.createCampaignPaths(for: json)
               
             let id1 = sut.evaluateConditions(for: "Primary1", attributes: [:])
             let id2 = sut.evaluateConditions(for: "Secondary1", attributes: [:])
@@ -142,22 +144,23 @@ final class AndOrTreeTests: XCTestCase {
             let id3 = sut.evaluateConditions(for: "Secondary4", attributes: [:])
             
            
-//            let id4 =  sut.evaluateConditions(for: "Primary3", attributes: [:])
-//            let id5 =  sut.evaluateConditions(for: "Secondary5", attributes: [:])
-//            let id6 =  sut.evaluateConditions(for: "Secondary6", attributes: [:])
+            let id4 =  sut.evaluateConditions(for: "Primary3", attributes: [:])
+            let id5 =  sut.evaluateConditions(for: "Secondary5", attributes: [:])
+            let id6 =  sut.evaluateConditions(for: "Secondary6", attributes: [:])
             
             let id8 = sut.evaluateConditions(for: "Secondary3", attributes: [:])
             
       
             XCTAssertNil(id1)
             XCTAssertNil(id2)
+            XCTAssertNil(id21)
             XCTAssertNil(id3)
-//            XCTAssertNil(id4)
-//            XCTAssertNil(id5)
-//            XCTAssertNil(id6)
+            XCTAssertNil(id4)
+            XCTAssertNil(id5)
+            XCTAssertNil(id6)
            
-          //  XCTAssertEqual(Set(id8 ?? []),Set(["campaignId1","campaignId2"]))
-            XCTAssertEqual(Set(id8 ?? []),Set(["campaignId1"]))
+            XCTAssertEqual(Set(id8 ?? []),Set(["campaignId1","campaignId2"]))
+           // XCTAssertEqual(Set(id8 ?? []),Set(["campaignId1"]))
 
            
         } else {
@@ -234,8 +237,10 @@ final class AndOrTreeTests: XCTestCase {
             XCTAssertEqual(id4,["campaignId1"])
             
             
+            // expecation won't be satisfied as path gets reset after the path completeion happened on Secondary4.
+            expectation1.isInverted = true
             wait(for: [expectation1], timeout: 7)
-            XCTAssertEqual(delegate.campaignid,"campaignId1")
+            XCTAssertNil(delegate.campaignid)
             
         } else {
             throw NSError()
@@ -312,7 +317,7 @@ final class AndOrTreeTests: XCTestCase {
     }
     
     
-    // When primary occurs again, timer gets reset. Here though the total time of wait is more than max allowed time, timer gets reset when primary occurs again. Check after commenting out the timer reset logic when path reset.
+    // When primary occurs again, timer gets reset. Here, though the total time of wait is more than max allowed time, timer gets reset when primary occurs again. Check after commenting out the timer reset logic when path reset.
     func testPathResetWhenPrimaryOccursAgainAndSuccessWhenAllSecondaryEventsHappeAgain() throws {
         let expectation1 = self.expectation(description: "1111")
         expectation1.expectedFulfillmentCount = 1

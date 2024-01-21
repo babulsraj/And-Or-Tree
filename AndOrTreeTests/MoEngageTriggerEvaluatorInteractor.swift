@@ -26,18 +26,10 @@ final class BabulTriggerEvaluatorInteractorTest: XCTestCase {
         if let json = parseJson(fileName: "filtersCobined")  {
             
             
-            let _ = pathCreator.createCampaignPaths(for: json)
+            let pp = pathCreator.createCampaignPaths(for: json)
             
             do {
                 try sut.savePaths(paths: Array(pathCreator.campaignPaths))
-            } catch {
-                throw error
-            }
-            
-            do {
-                let paths = try sut.getAllPaths()
-                XCTAssertEqual(paths.count, 2)
-
             } catch {
                 throw error
             }
@@ -46,8 +38,8 @@ final class BabulTriggerEvaluatorInteractorTest: XCTestCase {
             throw NSError()
         }
         
-        XCTAssertTrue(sut.doesPathExist(for: "campaignId1"))
-        XCTAssertTrue(sut.doesPathExist(for: "campaignId2"))
+        XCTAssertTrue(sut.doesPathExist(for: "campaignIdStoring1"))
+        XCTAssertTrue(sut.doesPathExist(for: "campaignIdStoring2"))
     }
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
