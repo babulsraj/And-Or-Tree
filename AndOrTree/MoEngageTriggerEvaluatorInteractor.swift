@@ -62,16 +62,16 @@ class BabulTriggerEvaluatorInteractor {
         try paths.forEach { try savePath(path: $0) }
     }
     
-    func getPath(for campaignId: String) throws -> BabulCampaignPath? {
-        guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else { return nil }
-
-        do {
-            let data = try Data(contentsOf: pathURL)
-            return try JSONDecoder().decode(BabulCampaignPath.self, from: data)
-        } catch {
-            throw BabulError.fileReadError(error)
-        }
-    }
+//    func getPath(for campaignId: String) throws -> BabulCampaignPath? {
+//        guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else { return nil }
+//
+//        do {
+//            let data = try Data(contentsOf: pathURL)
+//            return try JSONDecoder().decode(BabulCampaignPath.self, from: data)
+//        } catch {
+//            throw BabulError.fileReadError(error)
+//        }
+//    }
      
     func getAllPaths() throws -> [BabulCampaignPath] {
         guard let pathsFolderURL = pathsFolderURL else { throw BabulError.invalidPathError }

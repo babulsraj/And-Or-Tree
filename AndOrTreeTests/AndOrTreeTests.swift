@@ -27,7 +27,7 @@ final class AndOrTreeTests: XCTestCase {
     // Path formation
     func testFormPath() throws {
         
-        if let json = parseJson(fileName: "NewFilter") {
+        if let json = TestUtil.parseJson(fileName: "NewFilter") {
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
             let _ = sut.createCampaignPaths(for: json)
 
@@ -43,7 +43,7 @@ final class AndOrTreeTests: XCTestCase {
    // for  1||2 (1||2) & (3||4)
     func testPathEvaluation() throws {
         
-        if let json = parseJson(fileName: "filtersOR")  { // 1||2 (1||2) & (3||4)
+        if let json = TestUtil.parseJson(fileName: "filtersOR")  { // 1||2 (1||2) & (3||4)
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
             let _ = sut.createCampaignPaths(for: json)
             
@@ -64,7 +64,7 @@ final class AndOrTreeTests: XCTestCase {
     
     // for  1||2 (1&2) || (3&4)
     func testPathEvaluation1() throws {
-        if let json = parseJson(fileName: "filtersAND")  { // 1||2 (1&2) || (3&4)
+        if let json = TestUtil.parseJson(fileName: "filtersAND")  { // 1||2 (1&2) || (3&4)
             let paths = sut.createCampaignPaths(for: json)
             paths.first?.allowedTimeDuration = 5
                         
@@ -84,7 +84,7 @@ final class AndOrTreeTests: XCTestCase {
     // 1&1&2&(3||4)
     func testPathEvaluation2() throws {
         
-        if let json = parseJson(fileName: "NewFilter")  {// 1&1&2&(3||4)
+        if let json = TestUtil.parseJson(fileName: "NewFilter")  {// 1&1&2&(3||4)
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
             let _ = sut.createCampaignPaths(for: json)
             
@@ -106,7 +106,7 @@ final class AndOrTreeTests: XCTestCase {
     // 1&1&2&3&4
     func testPathEvaluationOnlyANDandOR () throws {
         
-        if let json = parseJson(fileName: "test")  {
+        if let json = TestUtil.parseJson(fileName: "test")  {
             let _ = sut.createCampaignPaths(for: json)
             
             let id = sut.evaluateConditions(for: "Primary1", attributes: [:])
@@ -134,7 +134,7 @@ final class AndOrTreeTests: XCTestCase {
   //  P3 || P4 &  5&6(3||7)
     func testPathEvaluation4multipleCampaignSatisfy() throws {
         
-        if let json = parseJson(fileName: "Combined")  {
+        if let json = TestUtil.parseJson(fileName: "Combined")  {
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
             let _ = sut.createCampaignPaths(for: json)
               
@@ -174,7 +174,7 @@ final class AndOrTreeTests: XCTestCase {
         let expectation1 = self.expectation(description: "1111")
         expectation1.expectedFulfillmentCount = 1
         
-        if let json = parseJson(fileName: "filtersANDHNE")  { // 1||2 (1&2) || (3&4) and 4 is HasNot
+        if let json = TestUtil.parseJson(fileName: "filtersANDHNE")  { // 1||2 (1&2) || (3&4) and 4 is HasNot
             let paths = sut.createCampaignPaths(for: json)
             let delegate = Mockdelegate(exp: expectation1)
             sut.delegate = delegate
@@ -197,7 +197,7 @@ final class AndOrTreeTests: XCTestCase {
     func testPathEvaluationForHNE1() throws {
         let expectation1 = self.expectation(description: "1111")
         expectation1.expectedFulfillmentCount = 1
-        if let json = parseJson(fileName: "filtersORHNE")  { // 1||2 (1||2) & (3||4) 3 is HNE
+        if let json = TestUtil.parseJson(fileName: "filtersORHNE")  { // 1||2 (1||2) & (3||4) 3 is HNE
             let paths = sut.createCampaignPaths(for: json)
             let delegate = Mockdelegate(exp: expectation1)
             sut.delegate = delegate
@@ -220,7 +220,7 @@ final class AndOrTreeTests: XCTestCase {
     func testPathEvaluationForHNE2() throws {
         let expectation1 = self.expectation(description: "1111")
         expectation1.expectedFulfillmentCount = 1
-        if let json = parseJson(fileName: "filtersORHNE")  { // 1||2 (1||2) & (3||4) 3 is HNE
+        if let json = TestUtil.parseJson(fileName: "filtersORHNE")  { // 1||2 (1||2) & (3||4) 3 is HNE
             let paths = sut.createCampaignPaths(for: json)
             let delegate = Mockdelegate(exp: expectation1)
             sut.delegate = delegate
@@ -249,7 +249,7 @@ final class AndOrTreeTests: XCTestCase {
     
     // Timer
     func testFormPathEvaluationTimeCheckWithMock() throws {
-        if let json = parseJson(fileName: "filtersAND")  { // 1||2 (1&2) || (3&4)
+        if let json = TestUtil.parseJson(fileName: "filtersAND")  { // 1||2 (1&2) || (3&4)
             let paths = sut.createCampaignPaths(for: json)
             paths.first?.allowedTimeDuration = 5
             let mockTimeProvider = MockTimeProvider()
@@ -272,7 +272,7 @@ final class AndOrTreeTests: XCTestCase {
     
     func testFormPathEvaluationTimeCheckWithSleep() throws {
         
-        if let json = parseJson(fileName: "filtersOR")  { // 1||2 (1||2) & (3||4)
+        if let json = TestUtil.parseJson(fileName: "filtersOR")  { // 1||2 (1||2) & (3||4)
             let path = sut.createCampaignPaths(for: json)
             path.first?.allowedTimeDuration = 3
                         
@@ -294,7 +294,7 @@ final class AndOrTreeTests: XCTestCase {
     // Path Reset
     
     func testPathResetWhenPrimaryOccursAgain() throws {
-        if let json = parseJson(fileName: "filtersOR")  {  // 1||2 (1||2) & (3||4)
+        if let json = TestUtil.parseJson(fileName: "filtersOR")  {  // 1||2 (1||2) & (3||4)
             let path = sut.createCampaignPaths(for: json)
             path.first?.allowedTimeDuration = 3
                         
@@ -325,7 +325,7 @@ final class AndOrTreeTests: XCTestCase {
         let expectation2 = self.expectation(description: "22")
         expectation1.expectedFulfillmentCount = 1
         
-        if let json = parseJson(fileName: "filtersOR")  {  // 1||2 (1||2) & (3||4)
+        if let json = TestUtil.parseJson(fileName: "filtersOR")  {  // 1||2 (1||2) & (3||4)
             let path = sut.createCampaignPaths(for: json)
             path.first?.allowedTimeDuration = 4
                         
@@ -362,7 +362,7 @@ final class AndOrTreeTests: XCTestCase {
     
     // Saving and retrieving
     func testSavingPathAsJson() throws {
-        if let json = parseJson(fileName: "filtersOR")  {
+        if let json = TestUtil.parseJson(fileName: "filtersOR")  {
             
             
             let paths = sut.createCampaignPaths(for: json)
@@ -399,7 +399,7 @@ final class AndOrTreeTests: XCTestCase {
     
     // for  1||2 (1&2) || (3&4)
     func testPathSavingStatesWhileRetreiving() throws {
-        if let json = parseJson(fileName: "filtersAND")  { // 1||2 (1&2) || (3&4)
+        if let json = TestUtil.parseJson(fileName: "filtersAND")  { // 1||2 (1&2) || (3&4)
             let paths = sut.createCampaignPaths(for: json)
             paths.first?.allowedTimeDuration = 5
                         
@@ -424,24 +424,6 @@ final class AndOrTreeTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-    
-    func parseJson(fileName: String) -> [[String:Any]]? {
-        let bundle = Bundle(for: AndOrTreeTests.self)
-        if let path = bundle.path(forResource: fileName, ofType: "json") {
-            do {
-                  let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-                  let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-                  if let jsonResult = jsonResult as? [[String:Any]] {
-                            return jsonResult
-                  }
-              } catch {
-                   return nil
-              }
-        }
-        
-        return nil
-    }
-
 }
 
 

@@ -34,6 +34,9 @@
 		D61DE5442B594DF1001AD764 /* NewFilter.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5432B594DF1001AD764 /* NewFilter.json */; };
 		D61DE5472B5B198A001AD764 /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5462B5B198A001AD764 /* test.json */; };
 		D61DE5492B5B2FDD001AD764 /* Combined.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5482B5B2FDD001AD764 /* Combined.json */; };
+		D61DE54E2B5EE268001AD764 /* MoEngageCampaignPathTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE54D2B5EE268001AD764 /* MoEngageCampaignPathTest.swift */; };
+		D61DE5502B5EEA6C001AD764 /* PathNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE54F2B5EEA6C001AD764 /* PathNew.swift */; };
+		D61DE5522B5EEFB6001AD764 /* filtersORAndHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5512B5EEFB6001AD764 /* filtersORAndHNE.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +88,9 @@
 		D61DE5462B5B198A001AD764 /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = test.json; path = AndOrTree/test.json; sourceTree = SOURCE_ROOT; };
 		D61DE5482B5B2FDD001AD764 /* Combined.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = Combined.json; path = AndOrTree/Combined.json; sourceTree = SOURCE_ROOT; };
 		D61DE54A2B5BEF70001AD764 /* AndOrTree.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AndOrTree.xctestplan; sourceTree = "<group>"; };
+		D61DE54D2B5EE268001AD764 /* MoEngageCampaignPathTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageCampaignPathTest.swift; sourceTree = "<group>"; };
+		D61DE54F2B5EEA6C001AD764 /* PathNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathNew.swift; sourceTree = "<group>"; };
+		D61DE5512B5EEFB6001AD764 /* filtersORAndHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = filtersORAndHNE.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +147,7 @@
 				D61DE5012B55459B001AD764 /* MoEngageTriggerPathBuilder.swift */,
 				D61DE4FD2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */,
 				C0022FC22B2B82C4005629AA /* Path.swift */,
+				D61DE54F2B5EEA6C001AD764 /* PathNew.swift */,
 				C05ACE692B361627008E0F4B /* Utils.swift */,
 				C06CE7102B1B43FB0026CAFC /* ContentView.swift */,
 				C06CE7382B1B442B0026CAFC /* Logic.swift */,
@@ -174,8 +181,10 @@
 				C07ED7382B4D627E0027AA67 /* filters11.json */,
 				C0022FE32B2B8E70005629AA /* filtersOR.json */,
 				C07ED7BE2B548DAB0027AA67 /* filtersORHNE.json */,
+				D61DE5512B5EEFB6001AD764 /* filtersORAndHNE.json */,
 				C06CE71F2B1B43FD0026CAFC /* AndOrTreeTests.swift */,
 				D61DE4FF2B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */,
+				D61DE54D2B5EE268001AD764 /* MoEngageCampaignPathTest.swift */,
 			);
 			path = AndOrTreeTests;
 			sourceTree = "<group>";
@@ -311,6 +320,7 @@
 				C07ED7BB2B53E71B0027AA67 /* filtersCobinedHNE.json in Resources */,
 				C07ED7B72B53C46F0027AA67 /* filtersAND.json in Resources */,
 				C07ED7392B4D627E0027AA67 /* filters11.json in Resources */,
+				D61DE5522B5EEFB6001AD764 /* filtersORAndHNE.json in Resources */,
 				D61DE5442B594DF1001AD764 /* NewFilter.json in Resources */,
 				C07ED7BD2B53F9A70027AA67 /* filtersANDHNE.json in Resources */,
 				D61DE5472B5B198A001AD764 /* test.json in Resources */,
@@ -338,6 +348,7 @@
 				C0022FC32B2B82C4005629AA /* Path.swift in Sources */,
 				D61DE5022B55459B001AD764 /* MoEngageTriggerPathBuilder.swift in Sources */,
 				C06CE70F2B1B43FB0026CAFC /* AndOrTreeApp.swift in Sources */,
+				D61DE5502B5EEA6C001AD764 /* PathNew.swift in Sources */,
 				D61DE4FE2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift in Sources */,
 				C05ACE6A2B361627008E0F4B /* Utils.swift in Sources */,
 			);
@@ -348,6 +359,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D61DE5002B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift in Sources */,
+				D61DE54E2B5EE268001AD764 /* MoEngageCampaignPathTest.swift in Sources */,
 				C06CE7202B1B43FD0026CAFC /* AndOrTreeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
