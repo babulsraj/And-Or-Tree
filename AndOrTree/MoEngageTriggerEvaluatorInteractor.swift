@@ -40,6 +40,7 @@ class BabulTriggerEvaluatorInteractor {
     func savePath(path: BabulCampaignPath) throws {
         guard let json = path.convertToDict() else { throw BabulError.jsonConversionError }
         guard let pathsFolderURL = pathsFolderURL else { throw BabulError.invalidPathError }
+        print(pathsFolderURL)
         
         do {
             try FileManager.default.createDirectory(at: pathsFolderURL, withIntermediateDirectories: true)
@@ -62,16 +63,16 @@ class BabulTriggerEvaluatorInteractor {
         try paths.forEach { try savePath(path: $0) }
     }
     
-//    func getPath(for campaignId: String) throws -> BabulCampaignPath? {
-//        guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else { return nil }
-//
-//        do {
-//            let data = try Data(contentsOf: pathURL)
-//            return try JSONDecoder().decode(BabulCampaignPath.self, from: data)
-//        } catch {
-//            throw BabulError.fileReadError(error)
-//        }
-//    }
+    func getPath(for campaignId: String) throws -> BabulCampaignPath? {
+        guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else { return nil }
+
+        do {
+            let data = try Data(contentsOf: pathURL)
+            return try JSONDecoder().decode(BabulCampaignPath.self, from: data)
+        } catch {
+            throw BabulError.fileReadError(error)
+        }
+    }
      
     func getAllPaths() throws -> [BabulCampaignPath] {
         guard let pathsFolderURL = pathsFolderURL else { throw BabulError.invalidPathError }
@@ -99,6 +100,72 @@ class BabulTriggerEvaluatorInteractor {
         }
         
         return FileManager.default.fileExists(atPath: pathURL.path)
+    }
+    
+    func deletePath(for campaignId: String) -> Bool {
+        guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else {
+            return false
+        }
+
+        do {
+            try FileManager.default.removeItem(at: pathURL)
+            print("File deleted successfully.")
+            return true
+        } catch {
+            print("Error deleting file: \(error.localizedDescription)")
+        }
+        
+        return false
+    }
+    
+    func deleteAllPath() throws -> Bool {
+        guard let pathsFolderURL = pathsFolderURL else { throw BabulError.invalidPathError }
+        
+        do {
+            let files = try FileManager.default.contentsOfDirectory(at: pathsFolderURL, includingPropertiesForKeys: nil)
+            _ = files.compactMap { fileURL in
+                do {
+                    try FileManager.default.removeItem(at: fileURL)
+                    print("File deleted successfully.")
+                    return true
+                } catch {
+                    // Handle individual file errors or log them
+                    print("Error deleting file: \(error.localizedDescription)")
+                    return nil
+                }
+            }
+        } catch {
+            throw BabulError.fileReadError(error)
+        }
+        
+        return false
+    }
+    
+    func savePrimaryEventsCache(_ cache:[String: [String]]) {
+        saveDctionaryToUserDefaults(dictionary: cache, forKey: "primaryCache")
+    }
+    
+    func getPrimaryEventsCache() -> [String: [String]]? {
+        return getDictionaryFromUserDefaults(forKey: "primaryCache")
+    }
+    
+    func saveSecondaryEventsCache(_ cache:[String: [String]]) {
+        saveDctionaryToUserDefaults(dictionary: cache, forKey: "secondaryCache")
+    }
+    
+    func getSecondaryEventsCache() -> [String: [String]]? {
+        return getDictionaryFromUserDefaults(forKey: "secondaryCache")
+    }
+    
+   private func saveDctionaryToUserDefaults(dictionary: [String: [String]], forKey key: String) {
+        UserDefaults.standard.set(dictionary, forKey: key)
+    }
+    
+    private func getDictionaryFromUserDefaults(forKey key: String) -> [String: [String]]? {
+        if let dictionary = UserDefaults.standard.dictionary(forKey: key) as? [String: [String]] {
+            return dictionary
+        }
+        return nil
     }
 }
 

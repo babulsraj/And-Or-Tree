@@ -11,19 +11,16 @@ import XCTest
 final class AndOrTreeTests: XCTestCase {
 
     let sut = BabulCampaignPathsHandler()
+    
     override func setUpWithError() throws {
+       try? sut.interactor.deleteAllPath()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
-   
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    override func tearDownWithError() throws {
+        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-    
+ 
     // Path formation
     func testFormPath() throws {
         
@@ -38,6 +35,17 @@ final class AndOrTreeTests: XCTestCase {
         }
     }
     
+    func testFormPathMeta() throws {
+        
+        if let json = TestUtil.parseJson(fileName: "NewFilter") {
+          // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
+            let path = sut.createCampaignPaths(for: json).first
+
+            XCTAssertEqual(sut.campaignPaths.first?.expiry,1800736063)
+        } else {
+            throw NSError()
+        }
+    }
     
     // Path Evaluation
    // for  1||2 (1||2) & (3||4)
@@ -270,6 +278,28 @@ final class AndOrTreeTests: XCTestCase {
         }
     }
     
+    func testFormPathEvaluationFailTimeCheckWithMock() throws {
+        if let json = TestUtil.parseJson(fileName: "filtersAND")  { // 1||2 (1&2) || (3&4)
+            let paths = sut.createCampaignPaths(for: json)
+            paths.first?.allowedTimeDuration = 5
+            let mockTimeProvider = MockTimeProvider()
+            sut.campaignPaths.first?.timeProvider = mockTimeProvider
+                        
+            let id1 = sut.evaluateConditions(for: "Primary2", attributes: [:])
+            let id2 = sut.evaluateConditions(for: "Secondary4", attributes: [:])
+            
+            mockTimeProvider.date = Date().addingTimeInterval(6)
+            let id3 =  sut.evaluateConditions(for: "Secondary3", attributes: [:])
+      
+            XCTAssertNil(id1)
+            XCTAssertNil(id2)
+            XCTAssertNil(id3)
+           
+        } else {
+            throw NSError()
+        }
+    }
+    
     func testFormPathEvaluationTimeCheckWithSleep() throws {
         
         if let json = TestUtil.parseJson(fileName: "filtersOR")  { // 1||2 (1||2) & (3||4)
@@ -284,6 +314,26 @@ final class AndOrTreeTests: XCTestCase {
             XCTAssertNil(id1)
             XCTAssertNil(id2)
             XCTAssertEqual(id3,["campaignId1"])
+           
+        } else {
+            throw NSError()
+        }
+    }
+    
+    func testFormPathEvaluationFailTimeCheckWithSleep() throws {
+        
+        if let json = TestUtil.parseJson(fileName: "filtersOR")  { // 1||2 (1||2) & (3||4)
+            let path = sut.createCampaignPaths(for: json)
+            path.first?.allowedTimeDuration = 2
+                        
+            let id1 = sut.evaluateConditions(for: "Primary2", attributes: [:])
+            let id2 = sut.evaluateConditions(for: "Secondary2", attributes: [:])
+            sleep(3)
+            let id3 =  sut.evaluateConditions(for: "Secondary4", attributes: [:])
+      
+            XCTAssertNil(id1)
+            XCTAssertNil(id2)
+            XCTAssertNil(id3)
            
         } else {
             throw NSError()
@@ -399,9 +449,12 @@ final class AndOrTreeTests: XCTestCase {
     
     // for  1||2 (1&2) || (3&4)
     func testPathSavingStatesWhileRetreiving() throws {
+       //_ = try? sut.interactor.deleteAllPath()
+       
         if let json = TestUtil.parseJson(fileName: "filtersAND")  { // 1||2 (1&2) || (3&4)
             let paths = sut.createCampaignPaths(for: json)
-            paths.first?.allowedTimeDuration = 5
+            XCTAssertEqual(sut.campaignPaths.count,1)
+            paths.first?.allowedTimeDuration = 1000
                         
             let id1 = sut.evaluateConditions(for: "Primary2", attributes: [:])
             let id2 = sut.evaluateConditions(for: "Secondary4", attributes: [:])
@@ -412,6 +465,30 @@ final class AndOrTreeTests: XCTestCase {
             XCTAssertNil(id1)
             XCTAssertNil(id2)
             XCTAssertEqual(id3,["campaignId1"])
+           
+        } else {
+            throw NSError()
+        }
+    }
+    
+    // Path deletion On expiery
+    
+    func testPathDeletionOnExpiry() throws {
+//        sut.deleteEventPath(for: "campaignId1")
+//        sut.deleteEventPath(for: "campaignId2")
+       // try sut.interactor.deleteAllPath()
+       
+        if let json = TestUtil.parseJson(fileName: "ExpiryCheck")  { // 1||2 (1&2) || (3&4)
+            let mockTimeProvider = MockTimeProvider()
+            sut.timeProvider = mockTimeProvider
+            let paths = sut.createCampaignPaths(for: json)
+            XCTAssertEqual(sut.campaignPaths.count, 2)
+            XCTAssertEqual(try sut.interactor.getAllPaths().count, 2)
+         //   _ = paths.map {$0.expiry = Date().addingTimeInterval(300).timeIntervalSince1970}
+
+            mockTimeProvider.date = Date().addingTimeInterval(22000000)
+            let paths2 = sut.createCampaignPaths(for: json)
+            XCTAssertEqual(paths2.count, 1)
            
         } else {
             throw NSError()
@@ -432,6 +509,7 @@ class MockTimeProvider: TimeProvider {
    
     func getCurrentTime() -> Double {
         print("returning time - ", date?.timeIntervalSince1970 ?? Date().timeIntervalSince1970 )
+        print("current time - ", Date().timeIntervalSince1970 )
         return date?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
     }
  }

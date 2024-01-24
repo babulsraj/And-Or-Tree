@@ -37,6 +37,7 @@
 		D61DE54E2B5EE268001AD764 /* MoEngageCampaignPathTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE54D2B5EE268001AD764 /* MoEngageCampaignPathTest.swift */; };
 		D61DE5502B5EEA6C001AD764 /* PathNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE54F2B5EEA6C001AD764 /* PathNew.swift */; };
 		D61DE5522B5EEFB6001AD764 /* filtersORAndHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5512B5EEFB6001AD764 /* filtersORAndHNE.json */; };
+		D61DE5542B61196B001AD764 /* ExpiryCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5532B61196B001AD764 /* ExpiryCheck.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		D61DE54D2B5EE268001AD764 /* MoEngageCampaignPathTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageCampaignPathTest.swift; sourceTree = "<group>"; };
 		D61DE54F2B5EEA6C001AD764 /* PathNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathNew.swift; sourceTree = "<group>"; };
 		D61DE5512B5EEFB6001AD764 /* filtersORAndHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = filtersORAndHNE.json; sourceTree = "<group>"; };
+		D61DE5532B61196B001AD764 /* ExpiryCheck.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ExpiryCheck.json; path = AndOrTree/ExpiryCheck.json; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 		C06CE71E2B1B43FD0026CAFC /* AndOrTreeTests */ = {
 			isa = PBXGroup;
 			children = (
+				D61DE5532B61196B001AD764 /* ExpiryCheck.json */,
 				D61DE5482B5B2FDD001AD764 /* Combined.json */,
 				D61DE5462B5B198A001AD764 /* test.json */,
 				D61DE5432B594DF1001AD764 /* NewFilter.json */,
@@ -324,6 +327,7 @@
 				D61DE5442B594DF1001AD764 /* NewFilter.json in Resources */,
 				C07ED7BD2B53F9A70027AA67 /* filtersANDHNE.json in Resources */,
 				D61DE5472B5B198A001AD764 /* test.json in Resources */,
+				D61DE5542B61196B001AD764 /* ExpiryCheck.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

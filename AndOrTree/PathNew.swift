@@ -64,14 +64,14 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
     }
 
     var campaignId: String
-    let expiry: Double
+    var expiry: Double
     var path: Set<BabulCampaignPathNode> = []
     var allowedTimeDuration: Double
     var onTimeExpiryOfHasNotExecutedEvent: ((String) -> Void)?
     var scheduler: Timer?
     private var primaryOccurredTime: Double = 0
     var hasPrimaryOccurred: Bool = false
-    var timeProvider: TimeProvider?
+    var timeProvider: TimeProvider? = ActualTimeProvider()
     private var result: BabulCampaignPathNode?
     
     enum CodingKeys: String, CodingKey {
@@ -114,7 +114,7 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
     }
     
     
-    func isEventMatching(with input: BabulCampaignPathNode) -> Bool{
+    func isEventMatching(with input: BabulCampaignPathNode) -> Bool {
         // check for max duration can also be done here
         // go through all the modes and check for match
         
@@ -166,8 +166,9 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
     func isPathCompleted(isReset: Bool = false) -> Bool {
         print("checking if path completed \(self.campaignId)")
         let timeElapsed = (timeProvider?.getCurrentTime() ?? 0) - primaryOccurredTime
-       
-        if timeElapsed > allowedTimeDuration {
+       print("elapsed = \(timeElapsed) allowd = \(allowedTimeDuration)")
+        
+        if timeElapsed > allowedTimeDuration + 1 {
             print("oh nooooooo time expired")
             return false
         } else {

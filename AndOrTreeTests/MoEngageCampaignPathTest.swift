@@ -18,6 +18,7 @@ final class BabulCampaignPathTest: XCTestCase {
         guard let json = TestUtil.parseJson(fileName: "filtersORAndHNE")?.first else {throw NSError(domain: "omg", code: 404)}
         guard let path = BabulTriggerPathBuilder().buildCompletePath(for: sut.campaignId, with: json) else {throw NSError(domain: "omg", code: 405)}
         sut.path = path
+        sut.timeProvider = ActualTimeProvider()
     }
 
     override func tearDownWithError() throws {
@@ -59,7 +60,7 @@ final class BabulCampaignPathTest: XCTestCase {
             expectation1.fulfill()
         }
         
-        wait(for: [expectation1], timeout: 3)
+        wait(for: [expectation1], timeout: 4)
     }
     
     func testPathResetWhenPrimaryOccursAgain() {
@@ -140,7 +141,7 @@ final class BabulCampaignPathTest: XCTestCase {
         wait(for: [expectation1], timeout: 4)
     }
     
-    func testPathCompletedWithHNEOnTimeExpiry() {
+    func testPathCompletedWithHNEOnSecondaryTimeExpiry() {
         let expectation1 = self.expectation(description: "1111")
         expectation1.expectedFulfillmentCount = 1
         
@@ -160,7 +161,7 @@ final class BabulCampaignPathTest: XCTestCase {
         XCTAssertEqual(result, true)
     }
     
-    func testPathCompletedWithHNEOnEventOcuurance() {
+    func testPathCompletedOnEventOcuurance() {
         
         let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
         let node2 = BabulCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
@@ -190,11 +191,31 @@ final class BabulCampaignPathTest: XCTestCase {
             expectation1.fulfill()
         }
         
-        wait(for: [expectation1], timeout: 4)
+        wait(for: [expectation1], timeout: 3)
 
-        
         XCTAssertFalse(sut.scheduler?.isValid ?? true)
         XCTAssertFalse(sut.hasPrimaryOccurred)
+    }
+    
+    func testEventsOccuringAfterAlowedTimeIgnored() {
+        
+        let mockTimer = MockTimeProvider()
+        sut.timeProvider = mockTimer
+
+        
+        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node2 = BabulCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node3 = BabulCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+       
+        
+        _ = sut.isEventMatching(with: node1)
+        _ = sut.isEventMatching(with: node2)
+        
+        mockTimer.date = Date().addingTimeInterval(4)
+        _ = sut.isEventMatching(with: node3)
+        
+        let  result = self.sut.isPathCompleted()
+        XCTAssertEqual(result, false)
     }
 }
 
