@@ -105,24 +105,4 @@ class BabulTriggerPathBuilder {
     }
 }
 
-private func joinNodesWithAND(node1: Set<BabulCampaignPathNode>, node2: Set<BabulCampaignPathNode>) -> Set<BabulCampaignPathNode> {
-//        print("\n")
-//        print("joining -\(node1.first?.eventName) and \(node2.first?.eventName)")
-    var result = Set<BabulCampaignPathNode>()
-    for eventNode in node1 {
-        var newEventNode: BabulCampaignPathNode = eventNode
-        
-        while newEventNode.nextNodes != nil {
-            newEventNode = (newEventNode.nextNodes?.first)!
-        }
 
-        for nextNode in node2 {
-            var nodeToBeJoined: BabulCampaignPathNode?
-            
-            
-            nodeToBeJoined?.nextNodes?.insert(nextNode)
-        }
-        result.insert(newEventNode)
-    }
-    return result
-}

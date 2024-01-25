@@ -69,13 +69,15 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
     var allowedTimeDuration: Double
     var onTimeExpiryOfHasNotExecutedEvent: ((String) -> Void)?
     var scheduler: Timer?
-    private var primaryOccurredTime: Double = 0
+    private var primaryOccurredTime: Double = Double.greatestFiniteMagnitude
     var hasPrimaryOccurred: Bool = false
-    var timeProvider: TimeProvider? = ActualTimeProvider()
+    var timeProvider: TimeProvider = ActualTimeProvider()
     private var result: BabulCampaignPathNode?
+    var hasSecondaryNodes:Bool = true
+
     
     enum CodingKeys: String, CodingKey {
-        case campaignId, expiry, path, allowedTimeDuration, primaryOccurredTime, hasPrimaryOccurred
+        case campaignId, expiry, path, allowedTimeDuration, primaryOccurredTime, hasPrimaryOccurred, hasSecondaryNodes
     }
 
     init(campaignId: String, expiry: Double, allowedTimeDuration: Double) {
@@ -88,21 +90,32 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         path.forEach { $0.resetNode(shouldResetPrimary: shouldResetPrimary) }
         
         if shouldResetPrimary {
-            primaryOccurredTime = 0
+            primaryOccurredTime = Double.greatestFiniteMagnitude
             hasPrimaryOccurred = false
         } else {
-            primaryOccurredTime = Date().timeIntervalSince1970
+            primaryOccurredTime = timeProvider.getCurrentTime()
         }
         
         scheduler?.invalidate()
        
         if hasPrimaryOccurred {
-            startTimer()
+            startTimer(timeOut: allowedTimeDuration)
+        }
+    }
+    
+    func restart() {
+        guard hasPrimaryOccurred else {return}
+        let remainingTime = (primaryOccurredTime + allowedTimeDuration) - timeProvider.getCurrentTime()
+       
+        if remainingTime > 0 {
+            startTimer(timeOut: remainingTime)
+        } else {
+            reset(shouldResetPrimary: true)
         }
     }
 
-    private func startTimer() {
-        scheduler = Timer.scheduledTimer(withTimeInterval: allowedTimeDuration, repeats: false) { [weak self] _ in
+    func startTimer(timeOut: Double) {
+        scheduler = Timer.scheduledTimer(withTimeInterval: timeOut, repeats: false) { [weak self] _ in
             self?.onSecondaryEventTimeout()
         }
     }
@@ -113,13 +126,12 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         reset(shouldResetPrimary: true)
     }
     
-    
     func isEventMatching(with input: BabulCampaignPathNode) -> Bool {
         // check for max duration can also be done here
         // go through all the modes and check for match
         
      //   guard hasPrimaryOccurred else {return false}
-        
+        print("evaluation called for \(input.eventName) - \(self.campaignId)")
         self.result = nil
        
         if !hasPrimaryOccurred, input.conditionType != .primary {
@@ -132,10 +144,10 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
             print(" Node mated: - \(node.eventName) for path - \(self.campaignId)")
             
             if node.conditionType == .primary { // check logic if primary and secondary are same triggers, there can be bugs
-                self.primaryOccurredTime = Date().timeIntervalSince1970
+                self.primaryOccurredTime = timeProvider.getCurrentTime()
                 self.hasPrimaryOccurred = true
                 
-                startTimer()
+                startTimer(timeOut: allowedTimeDuration)
             }
             
             return true
@@ -165,8 +177,8 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
 
     func isPathCompleted(isReset: Bool = false) -> Bool {
         print("checking if path completed \(self.campaignId)")
-        let timeElapsed = (timeProvider?.getCurrentTime() ?? 0) - primaryOccurredTime
-       print("elapsed = \(timeElapsed) allowd = \(allowedTimeDuration)")
+        let timeElapsed = timeProvider.getCurrentTime() - primaryOccurredTime
+        print("elapsed = \(timeElapsed) allowd = \(allowedTimeDuration)")
         
         if timeElapsed > allowedTimeDuration + 1 {
             print("oh nooooooo time expired")
@@ -177,10 +189,11 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
                 print("path completed, \(self.campaignId)")
                 reset(shouldResetPrimary: true)
             }
+            
             return pathCompletion
         }
     }
-
+    
     private func isAnyCompletePath(isReset: Bool) -> Bool {
         for node in path {
             if isCompletePath(node, isReset: isReset) {
@@ -212,14 +225,6 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         } else {
             // This is a leaf node and it is completed
             return true
-        }
-    }
-
-    private func updatePrimaryNodeStatus(_ node: BabulCampaignPathNode) {
-        if node.conditionType == .primary {
-            primaryOccurredTime = Date().timeIntervalSince1970
-            hasPrimaryOccurred = true
-            startTimer()
         }
     }
 

@@ -114,8 +114,7 @@ class BabulCampaignPathsHandler {
             do {
                 if let path = try interactor.getPath(for: id) {
                     self.campaignPaths.insert(path)
-                    self.primaryEvents = mergeEventCaches(cache1: primaryEvents, cache2: interactor.getPrimaryEventsCache())
-                    self.secondaryEvents = mergeEventCaches(cache1: secondaryEvents, cache2: interactor.getSecondaryEventsCache()) 
+                    restoreEventsCache()
                     return path
                 } else {
                     // Handle the case when the path is nil (optional is nil)
@@ -137,10 +136,8 @@ class BabulCampaignPathsHandler {
         
         for (key, value) in cache2 {
             if let existingValue = mergedDict[key] {
-                // If the key exists, concatenate the arrays
                 mergedDict[key] = existingValue + value
             } else {
-                // If the key doesn't exist, add the new key-value pair
                 mergedDict[key] = value
             }
         }
@@ -182,8 +179,8 @@ class BabulCampaignPathsHandler {
     
     func updatePath(_ path: BabulCampaignPath, with json: [String:Any]) {
         guard let expiryVal = json["expiry"] as? Double else {return}
-        
         path.expiry = expiryVal
+        path.restart()
     }
     
     func saveOrDeletePath(path: BabulCampaignPath) {
@@ -213,6 +210,11 @@ class BabulCampaignPathsHandler {
         }
     }
     
+    private func restoreEventsCache() {
+        self.primaryEvents = mergeEventCaches(cache1: primaryEvents, cache2: interactor.getPrimaryEventsCache())
+        self.secondaryEvents = mergeEventCaches(cache1: secondaryEvents, cache2: interactor.getSecondaryEventsCache())
+    }
+    
     func updateCampaignPaths(for campaigns:[[String:Any]]) {
         
     }
@@ -221,6 +223,10 @@ class BabulCampaignPathsHandler {
         do {
             let paths = try interactor.getAllPaths()
             self.campaignPaths = Set(paths)
+            restoreEventsCache()
+            deleteAllExpiredCampaigns()
+            _ = paths.compactMap{$0.timeProvider = self.timeProvider}
+            _ = paths.compactMap{$0.restart()}
         } catch {
             print(error)
         }

@@ -474,14 +474,10 @@ final class AndOrTreeTests: XCTestCase {
     // Path deletion On expiery
     
     func testPathDeletionOnExpiry() throws {
-//        sut.deleteEventPath(for: "campaignId1")
-//        sut.deleteEventPath(for: "campaignId2")
-       // try sut.interactor.deleteAllPath()
-       
-        if let json = TestUtil.parseJson(fileName: "ExpiryCheck")  { // 1||2 (1&2) || (3&4)
+       if let json = TestUtil.parseJson(fileName: "ExpiryCheck")  { // 1||2 (1&2) || (3&4)
             let mockTimeProvider = MockTimeProvider()
             sut.timeProvider = mockTimeProvider
-            let paths = sut.createCampaignPaths(for: json)
+            let _ = sut.createCampaignPaths(for: json)
             XCTAssertEqual(sut.campaignPaths.count, 2)
             XCTAssertEqual(try sut.interactor.getAllPaths().count, 2)
          //   _ = paths.map {$0.expiry = Date().addingTimeInterval(300).timeIntervalSince1970}
@@ -494,6 +490,214 @@ final class AndOrTreeTests: XCTestCase {
             throw NSError()
         }
     }
+    
+    // Kill and relaunch Scenario
+    
+    //1. path completion after kill and relaunch
+    
+    // one month = 2592000, 1 day - 86400, 1 week - 604800
+    
+    //  P1 || P2 & 1&2 || 3&4 - April8
+    //  P3 || P4 &  5&6(3||7) - May8
+    func testPathCompletionAfterKillAndRelaunch() throws {
+        var timeProvider = MockTimeProvider()
+        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+
+        if let json = TestUtil.parseJson(fileName: "CombinedWithExpiry")  {
+          // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
+            let paths = optionalsut?.createCampaignPaths(for: json)
+            _ = paths?.forEach {$0.allowedTimeDuration = 7200}// At this time paths are already saved with the actual value of max allowed time. 7200 will be saved in the next save. Since next save is only for path April8, 7200 is reflected only for it, and by the time save happens for May8, we have already read the stored value(3) from the storage. so same step needs to be done before save happens foR mAY8 - This change is only needed for test cases. Won't happen in actual scenario as in actual scenario, whenever we modify the path we save it immediately before a read.
+              
+            let id1 = optionalsut?.evaluateConditions(for: "Primary1", attributes: [:])
+            let id2 = optionalsut?.evaluateConditions(for: "Secondary1", attributes: [:])
+           
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(600)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id21 = optionalsut?.evaluateConditions(for: "Secondary2", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(1000)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id3 = optionalsut?.evaluateConditions(for: "Secondary4", attributes: [:])
+            _ = optionalsut?.campaignPaths.forEach {$0.allowedTimeDuration = 7200} //
+            let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            optionalsut?.refreshPaths()
+            
+            let id5 =  optionalsut?.evaluateConditions(for: "Secondary5", attributes: [:])
+            let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(1003)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id8 = optionalsut?.evaluateConditions(for: "Secondary3", attributes: [:])
+            
+      
+            XCTAssertNil(id1)
+            XCTAssertNil(id2)
+            XCTAssertNil(id21)
+            XCTAssertNil(id3)
+            XCTAssertNil(id4)
+            XCTAssertNil(id5)
+            XCTAssertNil(id6)
+           
+            XCTAssertEqual(Set(id8 ?? []),Set(["expiryApril8","expiryMay8"]))
+           // XCTAssertEqual(Set(id8 ?? []),Set(["campaignId1"]))
+
+           
+        } else {
+            throw NSError()
+        }
+    }
+    
+    // campaign expiry on kill and relaunch
+    func testCampaignExpiryAfterKillAndRelaunch() throws {
+        let timeProvider = MockTimeProvider()
+        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+
+        if let json = TestUtil.parseJson(fileName: "CombinedWithExpiry")  {
+          // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
+            let paths = optionalsut?.createCampaignPaths(for: json)
+            
+            _ = paths?.forEach {$0.allowedTimeDuration = 7200}
+              
+            let id1 = optionalsut?.evaluateConditions(for: "Primary1", attributes: [:])
+            let id2 = optionalsut?.evaluateConditions(for: "Secondary1", attributes: [:])
+           
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(300)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id21 = optionalsut?.evaluateConditions(for: "Secondary2", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(7300)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            XCTAssertEqual(optionalsut?.campaignPaths.count, 2)
+            
+            let id3 = optionalsut?.evaluateConditions(for: "Secondary4", attributes: [:])
+            
+            _ = optionalsut?.campaignPaths.forEach {$0.allowedTimeDuration = 7200}
+           
+            let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(7300)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            XCTAssertEqual(optionalsut?.campaignPaths.count, 2) // paths are not deleted as camiagns are still not expired
+            
+            let id5 =  optionalsut?.evaluateConditions(for: "Secondary5", attributes: [:])
+            let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(6048)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id8 = optionalsut?.evaluateConditions(for: "Secondary3", attributes: [:])
+            
+      
+            XCTAssertNil(id1)
+            XCTAssertNil(id2)
+            XCTAssertNil(id21)
+            XCTAssertNil(id3)
+            XCTAssertNil(id4)
+            XCTAssertNil(id5)
+            XCTAssertNil(id6)
+           
+            XCTAssertEqual(Set(id8 ?? []),Set(["expiryMay8"]))
+           
+        } else {
+            throw NSError()
+        }
+    }
+    
+    
+    // secondary time expiry after kill and relaunch
+    
+    func testSecondaryTimeExpiryAfterKillAndRelaunch() throws {
+        let timeProvider = MockTimeProvider()
+        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+        
+        if let json = TestUtil.parseJson(fileName: "CombinedWithExpiry")  {
+            let paths = optionalsut?.createCampaignPaths(for: json)
+            _ = paths?.compactMap {$0.allowedTimeDuration = 7200}
+            
+            let id1 = optionalsut?.evaluateConditions(for: "Primary1", attributes: [:])
+            let id2 = optionalsut?.evaluateConditions(for: "Secondary1", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(3600)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id21 = optionalsut?.evaluateConditions(for: "Secondary2", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(8400)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            XCTAssertEqual(optionalsut?.campaignPaths.count, 2)
+            
+            let id3 = optionalsut?.evaluateConditions(for: "Secondary4", attributes: [:])
+            
+            
+            let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(2)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            XCTAssertEqual(optionalsut?.campaignPaths.count, 2)
+            
+            let id5 =  optionalsut?.evaluateConditions(for: "Secondary5", attributes: [:])
+            let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id8 = optionalsut?.evaluateConditions(for: "Secondary3", attributes: [:])
+            
+            
+            XCTAssertNil(id1)
+            XCTAssertNil(id2)
+            XCTAssertNil(id21)
+            XCTAssertNil(id3)
+            XCTAssertNil(id4)
+            XCTAssertNil(id5)
+            XCTAssertNil(id6)
+            
+            XCTAssertEqual(Set(id8 ?? []),Set(["expiryMay8"]))
+            
+        } else {
+            throw NSError()
+        }
+    }
+    
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
