@@ -563,6 +563,9 @@ final class AndOrTreeTests: XCTestCase {
     }
     
     // campaign expiry on kill and relaunch
+    
+    //  P1 || P2 & 1&2 || 3&4 - April8
+    //  P3 || P4 &  5&6(3||7) - May8
     func testCampaignExpiryAfterKillAndRelaunch() throws {
         let timeProvider = MockTimeProvider()
         var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
@@ -631,9 +634,9 @@ final class AndOrTreeTests: XCTestCase {
         }
     }
     
-    
     // secondary time expiry after kill and relaunch
-    
+    //  P1 || P2 & 1&2 || 3&4 - April8
+    //  P3 || P4 &  5&6(3||7) - May8
     func testSecondaryTimeExpiryAfterKillAndRelaunch() throws {
         let timeProvider = MockTimeProvider()
         var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
@@ -693,6 +696,108 @@ final class AndOrTreeTests: XCTestCase {
             
             XCTAssertEqual(Set(id8 ?? []),Set(["expiryMay8"]))
             
+        } else {
+            throw NSError()
+        }
+    }
+    //  P1 || P2 & 1&2 || 3&4 - April8
+    //  P3 || P4 &  5&6(3||7) - May8
+   
+    //1&1&2&(3||4) - expiryMay15
+    
+    
+    func testPatheGettingFormedAtDifferentTimesAndPathCompletion() throws {
+        let timeProvider = MockTimeProvider()
+        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+
+        if let json = TestUtil.parseJson(fileName: "CombinedWithExpiry")  {
+          // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
+            let paths = optionalsut?.createCampaignPaths(for: json)
+            
+            _ = paths?.forEach {$0.allowedTimeDuration = 7200}
+              
+            let id1 = optionalsut?.evaluateConditions(for: "Primary1", attributes: [:])
+            let id2 = optionalsut?.evaluateConditions(for: "Secondary1", attributes: [:])
+           
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(300)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id21 = optionalsut?.evaluateConditions(for: "Secondary2", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(7300)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            XCTAssertEqual(optionalsut?.campaignPaths.count, 2)
+            
+            let id3 = optionalsut?.evaluateConditions(for: "Secondary4", attributes: [:])
+            
+            _ = optionalsut?.campaignPaths.forEach {$0.allowedTimeDuration = 7200}
+           
+            let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(7300)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            XCTAssertEqual(optionalsut?.campaignPaths.count, 2) // paths are not deleted as camiagns are still not expired
+            
+            let id5 =  optionalsut?.evaluateConditions(for: "Secondary5", attributes: [:])
+            
+            // Adding a new Path in between
+            if let json = TestUtil.parseJson(fileName: "NewFilterWithExpiry")  {
+                // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
+                let paths = optionalsut?.createCampaignPaths(for: json)
+                
+                _ = paths?.forEach {$0.allowedTimeDuration = 7200}
+            }
+            
+            
+            let id1NF = optionalsut?.evaluateConditions(for: "Primary1NF", attributes: [:])
+            let id3NF = optionalsut?.evaluateConditions(for: "Secondary2NF", attributes: [:])
+            
+            let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(6048)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id2NF = optionalsut?.evaluateConditions(for: "Secondary1NF", attributes: [:])
+
+            
+            let id8 = optionalsut?.evaluateConditions(for: "Secondary3", attributes: [:])
+            
+      
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            timeProvider.date = Date().addingTimeInterval(7100)
+            optionalsut?.timeProvider = timeProvider
+            optionalsut?.refreshPaths()
+            
+            let id4NF =  optionalsut?.evaluateConditions(for: "Secondary3NF", attributes: [:])
+
+            XCTAssertNil(id1)
+            XCTAssertNil(id2)
+            XCTAssertNil(id21)
+            XCTAssertNil(id3)
+            XCTAssertNil(id4)
+            XCTAssertNil(id5)
+            XCTAssertNil(id6)
+            
+            XCTAssertNil(id1NF)
+            XCTAssertNil(id2NF)
+            XCTAssertNil(id3NF)
+           
+            XCTAssertEqual(Set(id8 ?? []),Set(["expiryMay8"]))
+            XCTAssertEqual(Set(id4NF ?? []),Set(["expiryMay15"]))
+           
         } else {
             throw NSError()
         }

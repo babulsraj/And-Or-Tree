@@ -39,6 +39,7 @@
 		D61DE5522B5EEFB6001AD764 /* filtersORAndHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5512B5EEFB6001AD764 /* filtersORAndHNE.json */; };
 		D61DE5542B61196B001AD764 /* ExpiryCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5532B61196B001AD764 /* ExpiryCheck.json */; };
 		D61DE5562B61A8C5001AD764 /* CombinedWithExpiry.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5552B61A8C5001AD764 /* CombinedWithExpiry.json */; };
+		D61DE5582B6265A2001AD764 /* NewFilterWithExpiry.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5572B6265A2001AD764 /* NewFilterWithExpiry.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		D61DE5512B5EEFB6001AD764 /* filtersORAndHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = filtersORAndHNE.json; sourceTree = "<group>"; };
 		D61DE5532B61196B001AD764 /* ExpiryCheck.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ExpiryCheck.json; path = AndOrTree/ExpiryCheck.json; sourceTree = SOURCE_ROOT; };
 		D61DE5552B61A8C5001AD764 /* CombinedWithExpiry.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = CombinedWithExpiry.json; path = AndOrTree/CombinedWithExpiry.json; sourceTree = SOURCE_ROOT; };
+		D61DE5572B6265A2001AD764 /* NewFilterWithExpiry.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = NewFilterWithExpiry.json; path = AndOrTree/NewFilterWithExpiry.json; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +179,7 @@
 			children = (
 				D61DE5532B61196B001AD764 /* ExpiryCheck.json */,
 				D61DE5552B61A8C5001AD764 /* CombinedWithExpiry.json */,
+				D61DE5572B6265A2001AD764 /* NewFilterWithExpiry.json */,
 				D61DE5482B5B2FDD001AD764 /* Combined.json */,
 				D61DE5462B5B198A001AD764 /* test.json */,
 				D61DE5432B594DF1001AD764 /* NewFilter.json */,
@@ -320,6 +323,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D61DE5492B5B2FDD001AD764 /* Combined.json in Resources */,
+				D61DE5582B6265A2001AD764 /* NewFilterWithExpiry.json in Resources */,
 				C07ED7B92B53CD820027AA67 /* filtersCobined.json in Resources */,
 				C07ED7BF2B548DAC0027AA67 /* filtersORHNE.json in Resources */,
 				D61DE5562B61A8C5001AD764 /* CombinedWithExpiry.json in Resources */,
