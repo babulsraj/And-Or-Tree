@@ -40,15 +40,8 @@ class BabulTriggerPathBuilder {
         
         for filter in filters {
             guard let eventNode = formCampaignPath(for: id, inputJson: filter, conditionType: conditionType) else {return nil}
-            //print("path is = \(eventPath.count)")
-            
-            for i in eventNode {
-               // print(i.eventName, terminator: " *")
-            }
             
             if filterOperator == "or" {
-               // print("\n")
-               // print("adding to eventPath \(eventPath.first?.eventName)")
                 eventNode.forEach {eventPath.insert($0)}
             } else {
                 if eventPath.isEmpty {
@@ -57,36 +50,12 @@ class BabulTriggerPathBuilder {
                     eventPath = joinNodesWithAND(node1: Set(eventPath), node2: eventNode)
                 }
             }
-            
-            //print("\n")
-        }
-        
-       // print("returning path \n")
-       //
-        for i in Set<BabulCampaignPathNode>(eventPath) {
-            //print(i.eventName, terminator: "^^  ")
         }
         
         return Set<BabulCampaignPathNode>(eventPath)
     }
-    
-//    private func joinNodesWithAND(node1: Set<BabulCampaignPathNode>, node2: Set<BabulCampaignPathNode>) -> Set<BabulCampaignPathNode> {
-//        print("\n")
-//        print("joining -\(node1.first?.eventName) and \(node2.first?.eventName)")
-//        var result = Set<BabulCampaignPathNode>()
-//        for eventNode in node1 {
-//            var newEventNode = eventNode
-//            for nextNode in node2 {
-//                newEventNode.nextNodes?.insert(nextNode)
-//            }
-//            result.insert(newEventNode)
-//        }
-//        return result
-//    }
-    
+ 
     private func joinNodesWithAND(node1: Set<BabulCampaignPathNode>, node2: Set<BabulCampaignPathNode>) -> Set<BabulCampaignPathNode> {
-            //print("\n")
-            //print("joining -\(node1.first?.eventName) and \(node2.first?.eventName)")
         var result = Set<BabulCampaignPathNode>()
         for eventNode in node1 {
             let backUp = eventNode
@@ -99,8 +68,10 @@ class BabulTriggerPathBuilder {
             for nextNode in node2 {
                 newEventNode.nextNodes?.insert(nextNode)
             }
+            
             result.insert(eventNode)
         }
+        
         return result
     }
 }
