@@ -134,22 +134,6 @@ class BabulCampaignPathsHandler {
         )
     }
     
-    private func mergeEventCaches1(cache1:[String: [String]],cache2:[String: [String]]?) -> [String: [String]] {
-        guard let cache2 = cache2 else {return cache1}
-        
-        var mergedDict:[String: [String]] = cache1
-        
-        for (key, value) in cache2 {
-            if let existingValue = mergedDict[key] {
-                mergedDict[key] = existingValue + value
-            } else {
-                mergedDict[key] = value
-            }
-        }
-        
-        return mergedDict
-    }
-    
     private func savePath( _ path: BabulCampaignPath) {
         do {
            try self.interactor.savePath(path: path)
@@ -221,6 +205,11 @@ class BabulCampaignPathsHandler {
             deleteAllExpiredCampaigns()
             _ = paths.compactMap{$0.timeProvider = self.timeProvider}
             _ = paths.compactMap{$0.restart()}
+            _ = paths.compactMap { path in
+                path.onTimeExpiryOfHasNotExecutedEvent = { id in
+                    self.handleHasNotExecutedEventTimeExpiry(for: path)
+                }
+            }
         } catch {
             print(error)
         }

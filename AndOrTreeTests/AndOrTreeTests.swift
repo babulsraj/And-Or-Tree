@@ -637,7 +637,7 @@ final class AndOrTreeTests: XCTestCase {
     
     // secondary time expiry after kill and relaunch
     //  P1 || P2 & 1&2 || 3&4 - April8
-    //  P3 || P4 &  5&6(3||7) - May8
+    //  P3 || P4 &  5&6 & (3||7) - May8
     func testSecondaryTimeExpiryAfterKillAndRelaunch() throws {
         let timeProvider = MockTimeProvider()
         var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
@@ -702,10 +702,9 @@ final class AndOrTreeTests: XCTestCase {
         }
     }
     //  P1 || P2 & 1&2 || 3&4 - April8
-    //  P3 || P4 &  5&6(3||7) - May8
+    //  P3 || P4 &  5&6 & (3||7) - May8
    
     //1&1&2&(3||4) - expiryMay15
-    
     
     func testPatheGettingFormedAtDifferentTimesAndPathCompletion() throws {
         let timeProvider = MockTimeProvider()
@@ -804,7 +803,57 @@ final class AndOrTreeTests: XCTestCase {
         }
     }
     
+    
+    // secondary time expiry after kill and relaunch last one being HNE
+    //  P1 || P2 & 1&2 || 3&4 - April8
+    //  P3 || P4 &  5&6 & (3||7) - May8 3 is HNE
+    func testSecondaryPathCompletionWithHNEOnKillAndRelaunch() throws {
+        let timeProvider = MockTimeProvider()
+        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+        
+        
+        
+        if let json = TestUtil.parseJson(fileName: "CombinedWithExpiryHNE")  {
+            
+            let expectation1 = self.expectation(description: "1111")
+            expectation1.expectedFulfillmentCount = 1
+            let delegate = Mockdelegate(exp: expectation1)
+            
+            let paths = optionalsut?.createCampaignPaths(for: json)
+            _ = paths?.compactMap {$0.allowedTimeDuration = 2000}
+         
+            let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            optionalsut?.refreshPaths()
+            XCTAssertEqual(optionalsut?.campaignPaths.count, 2)
+            
+            let id5 =  optionalsut?.evaluateConditions(for: "Secondary5", attributes: [:])
+            let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
+            
+            optionalsut = nil
+            optionalsut = BabulCampaignPathsHandler()
+            optionalsut?.delegate = delegate
+            optionalsut?.timeProvider = timeProvider
+            timeProvider.date = Date().addingTimeInterval(1995)
+            optionalsut?.refreshPaths()
 
+            XCTAssertNil(id4)
+            XCTAssertNil(id5)
+            XCTAssertNil(id6)
+            
+            
+            wait(for: [expectation1], timeout: 7)
+            
+            XCTAssertEqual(delegate.campaignid,"expiryMay8")
+            
+        } else {
+            throw NSError()
+        }
+    }
+    
+  
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {

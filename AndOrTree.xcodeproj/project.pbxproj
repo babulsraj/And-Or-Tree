@@ -40,6 +40,7 @@
 		D61DE5542B61196B001AD764 /* ExpiryCheck.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5532B61196B001AD764 /* ExpiryCheck.json */; };
 		D61DE5562B61A8C5001AD764 /* CombinedWithExpiry.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5552B61A8C5001AD764 /* CombinedWithExpiry.json */; };
 		D61DE5582B6265A2001AD764 /* NewFilterWithExpiry.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5572B6265A2001AD764 /* NewFilterWithExpiry.json */; };
+		D61DE55A2B6665E6001AD764 /* CombinedWithExpiryHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = D61DE5592B6665E5001AD764 /* CombinedWithExpiryHNE.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 		D61DE5532B61196B001AD764 /* ExpiryCheck.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ExpiryCheck.json; path = AndOrTree/ExpiryCheck.json; sourceTree = SOURCE_ROOT; };
 		D61DE5552B61A8C5001AD764 /* CombinedWithExpiry.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = CombinedWithExpiry.json; path = AndOrTree/CombinedWithExpiry.json; sourceTree = SOURCE_ROOT; };
 		D61DE5572B6265A2001AD764 /* NewFilterWithExpiry.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = NewFilterWithExpiry.json; path = AndOrTree/NewFilterWithExpiry.json; sourceTree = SOURCE_ROOT; };
+		D61DE5592B6665E5001AD764 /* CombinedWithExpiryHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = CombinedWithExpiryHNE.json; path = AndOrTree/CombinedWithExpiryHNE.json; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +182,7 @@
 				D61DE5532B61196B001AD764 /* ExpiryCheck.json */,
 				D61DE5552B61A8C5001AD764 /* CombinedWithExpiry.json */,
 				D61DE5572B6265A2001AD764 /* NewFilterWithExpiry.json */,
+				D61DE5592B6665E5001AD764 /* CombinedWithExpiryHNE.json */,
 				D61DE5482B5B2FDD001AD764 /* Combined.json */,
 				D61DE5462B5B198A001AD764 /* test.json */,
 				D61DE5432B594DF1001AD764 /* NewFilter.json */,
@@ -332,6 +335,7 @@
 				C07ED7B72B53C46F0027AA67 /* filtersAND.json in Resources */,
 				C07ED7392B4D627E0027AA67 /* filters11.json in Resources */,
 				D61DE5522B5EEFB6001AD764 /* filtersORAndHNE.json in Resources */,
+				D61DE55A2B6665E6001AD764 /* CombinedWithExpiryHNE.json in Resources */,
 				D61DE5442B594DF1001AD764 /* NewFilter.json in Resources */,
 				C07ED7BD2B53F9A70027AA67 /* filtersANDHNE.json in Resources */,
 				D61DE5472B5B198A001AD764 /* test.json in Resources */,

@@ -105,7 +105,9 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         guard hasPrimaryOccurred else {return}
         let remainingTime = (primaryOccurredTime + allowedTimeDuration) - timeProvider.getCurrentTime()
        
+        print("remainng time isssss - \(remainingTime)")
         if remainingTime > 0 {
+            print("remainng time isssss - \(remainingTime)")
             startTimer(timeOut: remainingTime)
         } else {
             reset(shouldResetPrimary: true)
