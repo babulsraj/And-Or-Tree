@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-protocol BabulConditionEvaluatorDelegateProtocol {
-   func  didFinishTriggerConditionValidation(for campaign: String, with result: Result<TriggerConditionValidationResult,Error>) 
+protocol BabulConditionEvaluatorDelegateProtocol: class {
+   func  didFinishTriggerConditionValidation(for campaign: String, with result: Result<TriggerConditionValidationResult,Error>)
 }
 
 public protocol BabulConditionEvaluator {
@@ -36,7 +36,7 @@ public class BabulTriggerEvaluator {
     }
     
     func traverseTree() {
-        self.campaignsPathHandler.traverseTree()
+        //self.campaignsPathHandler.traverseTree()
     }
 }
 

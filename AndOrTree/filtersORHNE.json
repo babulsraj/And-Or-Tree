@@ -1,6 +1,7 @@
 [
     {
     "campaignId":"campaignId1",
+    "expiry":1744113600,
     "primaryCondition": {
         "included_filters": {
             "filterOperator": "or",

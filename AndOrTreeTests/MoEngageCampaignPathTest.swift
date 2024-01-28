@@ -10,7 +10,7 @@ import XCTest
 
 final class BabulCampaignPathTest: XCTestCase {
 
-    var sut: BabulCampaignPath = BabulCampaignPath(campaignId: "Campaigid1", expiry: 12345, allowedTimeDuration: 3)
+    var sut: BabulCampaignPath = BabulCampaignPath(campaignId: "Campaigid1", expiry: 12345, allowedTimeDuration: 3, timeProvider: MockTimeProvider())
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         

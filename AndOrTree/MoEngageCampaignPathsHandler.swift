@@ -10,101 +10,96 @@ import Foundation
 class BabulCampaignPathsHandler {
     private var primaryEvents:[String:[String]] = [:] // [PrimaryEventName:[CampaignId]]
     private var secondaryEvents:[String:[String]] = [:] // [SecondaryEventName:[CampaignId]]
-    var campaignPaths: Set<BabulCampaignPath> = []
-    let pathBuilder = BabulTriggerPathBuilder()
+    private(set) var campaignPaths: Set<BabulCampaignPath> = []
+    private let pathBuilder = BabulTriggerPathBuilder()
     var delegate: BabulConditionEvaluatorDelegateProtocol?
     let interactor = BabulTriggerEvaluatorInteractor()
     var timeProvider: TimeProvider = ActualTimeProvider()
     
-    func createCampaignPaths(for campaigns:[[String:Any]]) -> Set<BabulCampaignPath> {
-        for campaign in campaigns {
-            guard let campaignId = campaign["campaignId"] as? String else { continue }
+    func createCampaignPaths(for campaigns: [[String: Any]]) -> Set<BabulCampaignPath> {
+        campaigns.forEach { campaign in
+            guard let campaignId = campaign["campaignId"] as? String else { return }
             
             if let existingPath = getExistingPath(for: campaignId) {
                 updatePath(existingPath, with: campaign)
-                saveOrDeletePath(path: existingPath)
-                continue
+                saveOrDeletePath(existingPath)
+            } else {
+                createAndStoreNewPath(for: campaignId, with: campaign)
             }
-           
-            let campainPath = BabulCampaignPath(campaignId: campaign["campaignId"] as?  String ?? "", expiry: campaign["expiry"] as? Double ?? 0.0, allowedTimeDuration: campaign["limit"] as? Double ?? 0.0)
-            
-            pathBuilder.onCreationOfNode = { [weak self] node in
-                (node.conditionType == .primary) ?
-                self?.primaryEvents[node.eventName, default:[]].append(campainPath.campaignId):
-                self?.secondaryEvents[node.eventName, default:[]].append(campainPath.campaignId)
-            }
-            
-            let path = pathBuilder.buildCompletePath(for: campainPath.campaignId, with: campaign)//buildCompletePath(path: campainPath, for:campaign)
-            
-            campainPath.path = path!
-            campainPath.allowedTimeDuration = 3
-            campainPath.timeProvider = ActualTimeProvider()
-            campainPath.onTimeExpiryOfHasNotExecutedEvent = { campaignId in
-                // evaluate the path progress
-                if campainPath.isPathCompleted(isReset: true) {
-                    self.delegate?.didFinishTriggerConditionValidation(for: campainPath.campaignId, with: .success(TriggerConditionValidationResult(campaignIds: [campainPath.campaignId])))
-                    self.savePath(campainPath)
-                } else {
-                    self.delegate?.didFinishTriggerConditionValidation(for: campainPath.campaignId, with: .failure(NSError()))
-                    self.savePath(campainPath)
-                }
-            }
-            
-            savePath(campainPath)
-            campaignPaths.insert(campainPath)
         }
         
         saveEventsCache()
-        
         return campaignPaths
     }
+
+    private func createAndStoreNewPath(for campaignId: String, with campaign: [String: Any]) {
+        let campaignPath = BabulCampaignPath(campaignId: campaignId,
+                                             expiry: campaign["expiry"] as? Double ?? 0.0,
+                                             allowedTimeDuration: campaign["limit"] as? Double ?? 0.0,
+                                             timeProvider: timeProvider)
+        configureCampaignPath(campaignPath, with: campaign)
+        savePath(campaignPath)
+        campaignPaths.insert(campaignPath)
+    }
+
+    private func buildEventsCache(_ node: BabulCampaignPathNode, campaignId: String) -> ()? {
+        return (node.conditionType == .primary) ?
+        self.primaryEvents[node.eventName, default:[]].append(campaignId):
+        self.secondaryEvents[node.eventName, default:[]].append(campaignId)
+    }
     
-    func evaluateConditions(for event: String, attributes:[String: Any]) -> [String]? {
-        var ids:[String]?
-        var paths:[BabulCampaignPath]? = nil
-        var conditionType: ConditionType? = nil
-        
-        if let campaignIds = primaryEvents[event] {
-            paths = self.campaignPaths.filter {campaignIds.contains($0.campaignId)}
-            conditionType = .primary
-        } else if let campaignIds = secondaryEvents[event] {
-            paths = self.campaignPaths.filter {campaignIds.contains($0.campaignId)}
-            conditionType = .secondary
+    private func configureCampaignPath(_ campaignPath: BabulCampaignPath, with campaign: [String: Any]) {
+        pathBuilder.onCreationOfNode = { [weak self] node in
+            self?.buildEventsCache(node, campaignId: campaignPath.campaignId)
         }
         
-        guard let paths = paths, let conditionType = conditionType else {return nil}
-        
-        let event = BabulCampaignPathNode(eventName: event, eventType: .hasExcecuted, conditionType: conditionType, attributes: attributes)
-        // let paths = self.campaignPaths.filter {$0.allNodes.contains(event)}
+        if let path = pathBuilder.buildCompletePath(for: campaignPath.campaignId, with: campaign) {
+            campaignPath.path = path
+            campaignPath.onTimeExpiryOfHasNotExecutedEvent = { [weak self] campaignId in
+                self?.handleHasNotExecutedEventTimeExpiry(for: campaignPath)
+            }
+        }
+    }
+    
+    func evaluateConditions(for event: String, attributes: [String: Any]) -> [String]? {
+        guard let campaignIds = primaryEvents[event] ?? secondaryEvents[event] else { return nil }
 
-        for path in paths {
-            if path.isEventMatching(with: event), path.isPathCompleted() {
-                if ids == nil {
-                    ids = []
-                }
-                ids?.append(path.campaignId)
-            } else if path.shoulRemovePath(having: event){
+        var resultIds: [String] = []
+
+        for path in campaignPaths {
+            guard !path.isExpired() else {
+                self.deleteEventPath(for: path.campaignId)
+               continue
+            }
+            
+            guard campaignIds.contains(path.campaignId) else { continue }
+            
+            let conditionType: ConditionType = (primaryEvents[event] != nil) ? .primary : .secondary
+
+            let eventNode = BabulCampaignPathNode(eventName: event, eventType: .hasExcecuted, conditionType: conditionType, attributes: attributes)
+
+            if path.isEventMatching(with: eventNode), path.isPathCompleted() {
+                resultIds.append(path.campaignId)
+            } else if path.shoulRemovePath(having: eventNode) {
                 self.campaignPaths.remove(path)
-            } else if path.shouldReset(having: event) {
+            } else if path.shouldReset(having: eventNode) {
                 path.reset(shouldResetPrimary: true)
             }
             
             self.savePath(path)
-            
         }
-        
-        return ids
+
+        return resultIds.isEmpty ? nil : resultIds
     }
     
-    private func getExistingNonExpiredPath(for id: String) -> BabulCampaignPath? {
-        guard let existingPath = getExistingPath(for: id) else { return nil}
-        
-        guard !hasCampaignExpired(path: existingPath) else {
-            deleteEventPath(for: existingPath.campaignId)
-            return nil
+    private func handleHasNotExecutedEventTimeExpiry(for campaignPath: BabulCampaignPath) {
+        if campaignPath.isPathCompleted(isReset: true) {
+            self.delegate?.didFinishTriggerConditionValidation(for: campaignPath.campaignId, with: .success(TriggerConditionValidationResult(campaignIds: [campaignPath.campaignId])))
+            self.savePath(campaignPath)
+        } else {
+            self.delegate?.didFinishTriggerConditionValidation(for: campaignPath.campaignId, with: .failure(NSError()))
+            self.savePath(campaignPath)
         }
-        
-        return existingPath
     }
     
     private func getExistingPath(for id: String) -> BabulCampaignPath? {
@@ -129,7 +124,17 @@ class BabulCampaignPathsHandler {
         return nil
     }
     
-    private func mergeEventCaches(cache1:[String: [String]],cache2:[String: [String]]?) -> [String: [String]] {
+    private func mergeEventCaches(cache1: [String: [String]], cache2: [String: [String]]?) -> [String: [String]] {
+        guard let cache2 = cache2 else { return cache1 }
+
+        return Dictionary(uniqueKeysWithValues:
+            (cache1.merging(cache2, uniquingKeysWith: +)).map { key, value in
+                (key, Array(Set(value)))
+            }
+        )
+    }
+    
+    private func mergeEventCaches1(cache1:[String: [String]],cache2:[String: [String]]?) -> [String: [String]] {
         guard let cache2 = cache2 else {return cache1}
         
         var mergedDict:[String: [String]] = cache1
@@ -153,47 +158,36 @@ class BabulCampaignPathsHandler {
         }
     }
     
-    func saveEventsCache() {
+    private func saveEventsCache() {
         interactor.savePrimaryEventsCache(self.primaryEvents)
         interactor.saveSecondaryEventsCache(self.secondaryEvents)
-        
-        let pp = interactor.getPrimaryEventsCache()
-        let ss = interactor.getSecondaryEventsCache()
     }
     
     func deleteAllExpiredCampaigns() {
-        for campaignPath in campaignPaths {
-            if hasCampaignExpired(path: campaignPath) {
-                deleteEventPath(for: campaignPath.campaignId)
-            }
-        }
+        campaignPaths.filter {$0.isExpired()}.forEach {deleteEventPath(for: $0.campaignId)}
     }
     
-    func hasCampaignExpired(path: BabulCampaignPath) -> Bool {
-        return path.expiry <= timeProvider.getCurrentTime()
-    }
-    
-    func doesPathExist(with id: String) -> Bool {
+    private func doesPathExist(with id: String) -> Bool {
         return interactor.doesPathExist(for: id) || campaignPaths.filter{$0.campaignId == id}.count > 0
     }
     
-    func updatePath(_ path: BabulCampaignPath, with json: [String:Any]) {
+    private func updatePath(_ path: BabulCampaignPath, with json: [String:Any]) {
         guard let expiryVal = json["expiry"] as? Double else {return}
         path.expiry = expiryVal
         path.restart()
     }
     
-    func saveOrDeletePath(path: BabulCampaignPath) {
-        if hasCampaignExpired(path: path) {
+    private func saveOrDeletePath(_ path: BabulCampaignPath) {
+        if path.isExpired() {
             deleteEventPath(for: path.campaignId)
         } else {
             savePath(path)
         }
     }
     
-    func deleteEventPath(for campaignId:String) {
+    private func deleteEventPath(for campaignId:String) {
         _ = self.interactor.deletePath(for: campaignId)
-        self.campaignPaths.remove(BabulCampaignPath(campaignId: campaignId, expiry: 0, allowedTimeDuration: 0))
+        self.campaignPaths.remove(BabulCampaignPath(campaignId: campaignId, expiry: 0, allowedTimeDuration: 0, timeProvider: timeProvider))
         self.deleteCampaignFrom(cache: &primaryEvents, campaignId: campaignId)
         self.deleteCampaignFrom(cache: &secondaryEvents, campaignId: campaignId)
     }

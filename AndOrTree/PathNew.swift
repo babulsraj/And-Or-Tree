@@ -16,16 +16,14 @@ class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
         hasher.combine(eventName)
     }
     
-    var timeOccurred: Double? = nil
     let eventName: String
     let eventType: EventType
     let conditionType: ConditionType
     var nextNodes: Set<BabulCampaignPathNode>? = nil
-    var attributes: [String: JSONAny]?
+    let attributes: [String: JSONAny]?
     var hasMatched: Bool = false
     
     enum CodingKeys: String, CodingKey {
-        case timeOccurred
         case eventName
         case eventType
         case conditionType
@@ -50,6 +48,7 @@ class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
         if shouldResetPrimary || conditionType == .secondary {
             hasMatched = false
         }
+        
         nextNodes?.forEach { $0.resetNode(shouldResetPrimary: shouldResetPrimary) }
     }
 }
@@ -63,27 +62,26 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         hasher.combine(campaignId)
     }
 
-    var campaignId: String
+    let campaignId: String
     var expiry: Double
     var path: Set<BabulCampaignPathNode> = []
     var allowedTimeDuration: Double
     var onTimeExpiryOfHasNotExecutedEvent: ((String) -> Void)?
-    var scheduler: Timer?
-    private var primaryOccurredTime: Double = Double.greatestFiniteMagnitude
-    var hasPrimaryOccurred: Bool = false
+    private (set)var scheduler: Timer?
+    private (set)var primaryOccurredTime: Double = Double.greatestFiniteMagnitude
+    private (set)var hasPrimaryOccurred: Bool = false
     var timeProvider: TimeProvider = ActualTimeProvider()
-    private var result: BabulCampaignPathNode?
-    var hasSecondaryNodes:Bool = true
+    private var eventMatchingResult: ConditionType?
 
-    
     enum CodingKeys: String, CodingKey {
-        case campaignId, expiry, path, allowedTimeDuration, primaryOccurredTime, hasPrimaryOccurred, hasSecondaryNodes
+        case campaignId, expiry, path, allowedTimeDuration, primaryOccurredTime, hasPrimaryOccurred
     }
 
-    init(campaignId: String, expiry: Double, allowedTimeDuration: Double) {
+    init(campaignId: String, expiry: Double, allowedTimeDuration: Double, timeProvider: TimeProvider) {
         self.campaignId = campaignId
         self.expiry = expiry
         self.allowedTimeDuration = allowedTimeDuration
+        self.timeProvider = timeProvider
     }
 
     func reset(shouldResetPrimary: Bool) {
@@ -113,8 +111,12 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
             reset(shouldResetPrimary: true)
         }
     }
+    
+    func isExpired() -> Bool {
+        return self.expiry <= timeProvider.getCurrentTime()
+    }
 
-    func startTimer(timeOut: Double) {
+    private func startTimer(timeOut: Double) {
         scheduler = Timer.scheduledTimer(withTimeInterval: timeOut, repeats: false) { [weak self] _ in
             self?.onSecondaryEventTimeout()
         }
@@ -126,24 +128,19 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         reset(shouldResetPrimary: true)
     }
     
-    func isEventMatching(with input: BabulCampaignPathNode) -> Bool {
-        // check for max duration can also be done here
-        // go through all the modes and check for match
-        
-     //   guard hasPrimaryOccurred else {return false}
+    // #MARK: Event Matching
+   func isEventMatching(with input: BabulCampaignPathNode) -> Bool {
         print("evaluation called for \(input.eventName) - \(self.campaignId)")
-        self.result = nil
-       
-        if !hasPrimaryOccurred, input.conditionType != .primary {
+       eventMatchingResult = nil
+        
+       if !hasPrimaryOccurred, input.conditionType != .primary {
             return false
         } else if input.conditionType == .primary, hasPrimaryOccurred {
             reset(shouldResetPrimary: false)
             return false
-        } else if let node = getMatchingNode(for: input, with: self.path) {
+        } else if let conditionType = isNodeMatching(for: input, with: self.path) {
             
-            print(" Node mated: - \(node.eventName) for path - \(self.campaignId)")
-            
-            if node.conditionType == .primary { // check logic if primary and secondary are same triggers, there can be bugs
+            if conditionType == .primary { // check logic if primary and secondary are same triggers, there can be bugs
                 self.primaryOccurredTime = timeProvider.getCurrentTime()
                 self.hasPrimaryOccurred = true
                 
@@ -156,25 +153,30 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         return false
     }
  
-    private  func getMatchingNode(for refNode:BabulCampaignPathNode ,with events: Set<BabulCampaignPathNode>?) -> BabulCampaignPathNode?  {
-         
-         guard let events = events else {
-             return nil
-         }
-         
-         for node in events {
-             // print(node.eventName)
-             if refNode.eventName == node.eventName {
-                 node.hasMatched = true
-                 result = node
-             }
+    private  func isNodeMatching(for refNode:BabulCampaignPathNode, with events: Set<BabulCampaignPathNode>?) -> ConditionType?  {
+        
+        guard let events = events else {
+            return nil
+        }
+        
+        for node in events {
+            if refNode.eventName == node.eventName {
+                node.hasMatched = true
+                print(" Node matched: - \(node.eventName) for path - \(self.campaignId)")
+                eventMatchingResult = node.conditionType
+                
+                if node.conditionType == .primary {
+                    return node.conditionType
+                }
+            }
+            
+            _ = isNodeMatching(for: refNode, with: node.nextNodes)
+        }
+        
+        return eventMatchingResult
+    }
 
-             _ = getMatchingNode(for: refNode, with: node.nextNodes)
-         }
-         
-         return result
-     }
-
+// #MARK: Path Completion
     func isPathCompleted(isReset: Bool = false) -> Bool {
         print("checking if path completed \(self.campaignId)")
         let timeElapsed = timeProvider.getCurrentTime() - primaryOccurredTime
@@ -193,39 +195,23 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
             return pathCompletion
         }
     }
-    
+
     private func isAnyCompletePath(isReset: Bool) -> Bool {
-        for node in path {
-            if isCompletePath(node, isReset: isReset) {
-                return true
-            }
-        }
-        
-        print("returning false")
-        return false
+        return path.contains { isCompletePath($0, isReset: isReset) }
     }
-    
+
     private func isCompletePath(_ node: BabulCampaignPathNode, isReset: Bool = false) -> Bool {
-        print("\(node.eventName) - \(node.eventType) - matched - \(node.hasMatched) -  \(node.isCompleted)")
-        if !isReset && node.eventType == .hasNotExcecuted {
+        print("\(node.eventName) - \(node.eventType) - matched - \(node.hasMatched) - \(node.isCompleted)")
+
+        if !isReset && node.eventType == .hasNotExcecuted || !node.isCompleted {
             return false
         }
-        
-        if !node.isCompleted {
-            return false
+
+        guard let nextNodes = node.nextNodes, !nextNodes.isEmpty else {
+            return true // Leaf node
         }
-        
-        if let nextNodes = node.nextNodes, !nextNodes.isEmpty {
-            for nextNode in nextNodes {
-                if isCompletePath(nextNode, isReset: isReset) {
-                    return true
-                }
-            }
-            return false
-        } else {
-            // This is a leaf node and it is completed
-            return true
-        }
+
+        return nextNodes.contains { isCompletePath($0, isReset: isReset) }
     }
 
     func shoulRemovePath(having event: BabulCampaignPathNode) -> Bool {

@@ -464,6 +464,7 @@ final class AndOrTreeTests: XCTestCase {
       
             XCTAssertNil(id1)
             XCTAssertNil(id2)
+            XCTAssertNil(ida)
             XCTAssertEqual(id3,["campaignId1"])
            
         } else {
@@ -658,7 +659,7 @@ final class AndOrTreeTests: XCTestCase {
             
             optionalsut = nil
             optionalsut = BabulCampaignPathsHandler()
-            timeProvider.date = Date().addingTimeInterval(8400)
+            timeProvider.date = Date().addingTimeInterval(8400) // expiring primary1
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
             XCTAssertEqual(optionalsut?.campaignPaths.count, 2)

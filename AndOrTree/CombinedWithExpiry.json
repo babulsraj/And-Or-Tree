@@ -1,7 +1,7 @@
 [
     {
-        "campaignId": "campaignId1",
-        "expiry":1744113600,
+        "campaignId": "expiryApril8",
+        "expiry":1712577600,
         "primaryCondition": {
             "included_filters": {
                 "filterOperator": "or",
@@ -139,8 +139,8 @@
         }
     },
     {
-        "campaignId": "campaignId2",
-        "expiry":1744113600,
+        "campaignId": "expiryMay8",
+        "expiry":1715169600,
         "primaryCondition": {
             "included_filters": {
                 "filterOperator": "or",
