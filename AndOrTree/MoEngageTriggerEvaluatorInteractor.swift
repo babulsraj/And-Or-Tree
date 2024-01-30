@@ -30,17 +30,21 @@ enum BabulTriggerEvaluatorError: Error {
     }
 }
 
+/// The `BabulTriggerEvaluatorInteractor` class manages the interaction with stored campaign paths and caches.
 class BabulTriggerEvaluatorInteractor {
     
+    /// The URL of the folder containing stored campaign paths.
     private var pathsFolderURL: URL? {
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         return documentsDirectory?.appendingPathComponent("CampaignPaths")
     }
     
+    /// Saves a campaign path to the file system.
+    /// - Parameter path: The `BabulCampaignPath` to be saved.
+    /// - Throws: An error of type `BabulTriggerEvaluatorError` if the operation fails.
     func savePath(path: BabulCampaignPath) throws {
         guard let json = path.convertToDict() else { throw BabulTriggerEvaluatorError.jsonConversionError }
         guard let pathsFolderURL = pathsFolderURL else { throw BabulTriggerEvaluatorError.invalidPathError }
-        print(pathsFolderURL)
         
         do {
             try FileManager.default.createDirectory(at: pathsFolderURL, withIntermediateDirectories: true)
@@ -58,11 +62,17 @@ class BabulTriggerEvaluatorInteractor {
         }
     }
 
-    
+    /// Saves multiple campaign paths to the file system.
+    /// - Parameter paths: An array of `BabulCampaignPath` instances to be saved.
+    /// - Throws: An error of type `BabulTriggerEvaluatorError` if the operation fails.
     func savePaths(paths: [BabulCampaignPath]) throws {
         try paths.forEach { try savePath(path: $0) }
     }
     
+    /// Retrieves a campaign path for a given campaign ID.
+    /// - Parameter campaignId: The ID of the campaign.
+    /// - Returns: The `BabulCampaignPath` if found, otherwise `nil`.
+    /// - Throws: An error of type `BabulTriggerEvaluatorError` if the operation fails.
     func getPath(for campaignId: String) throws -> BabulCampaignPath? {
         guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else { return nil }
 
@@ -74,6 +84,9 @@ class BabulTriggerEvaluatorInteractor {
         }
     }
      
+    /// Retrieves all stored campaign paths.
+    /// - Returns: An array of `BabulCampaignPath` instances.
+    /// - Throws: An error of type `BabulTriggerEvaluatorError` if the operation fails.
     func getAllPaths() throws -> [BabulCampaignPath] {
         guard let pathsFolderURL = pathsFolderURL else { throw BabulTriggerEvaluatorError.invalidPathError }
 
@@ -94,6 +107,9 @@ class BabulTriggerEvaluatorInteractor {
         }
     }
     
+    /// Checks if a campaign path exists for a given campaign ID.
+    /// - Parameter campaignId: The ID of the campaign.
+    /// - Returns: `true` if the path exists, otherwise `false`.
     func doesPathExist(for campaignId: String) -> Bool {
         guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else {
             return false
@@ -102,7 +118,11 @@ class BabulTriggerEvaluatorInteractor {
         return FileManager.default.fileExists(atPath: pathURL.path)
     }
     
-    func deletePath(for campaignId: String) -> Bool {
+    /// Deletes a campaign path for a given campaign ID.
+    /// - Parameter campaignId: The ID of the campaign.
+    /// - Returns: `true` if the deletion is successful, otherwise `false`.
+    @discardableResult
+    func deletePath(for campaignId: String) throws -> Bool {
         guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else {
             return false
         }
@@ -118,6 +138,9 @@ class BabulTriggerEvaluatorInteractor {
         return false
     }
     
+    /// Deletes all stored campaign paths.
+    /// - Returns: `true` if the deletion is successful, otherwise `false`.
+    /// - Throws: An error of type `BabulTriggerEvaluatorError` if the operation fails.
     func deleteAllPath() throws -> Bool {
         guard let pathsFolderURL = pathsFolderURL else { throw BabulTriggerEvaluatorError.invalidPathError }
         
@@ -141,26 +164,41 @@ class BabulTriggerEvaluatorInteractor {
         return false
     }
     
-    func savePrimaryEventsCache(_ cache:[String: [String]]) {
-        saveDctionaryToUserDefaults(dictionary: cache, forKey: "primaryCache")
+    /// Saves the primary events cache to UserDefaults.
+    /// - Parameter cache: The primary events cache to be saved.
+    func savePrimaryEventsCache(_ cache: [String: [String]]) {
+        saveDictionaryToUserDefaults(dictionary: cache, forKey: "primaryCache")
     }
     
+    /// Retrieves the primary events cache from UserDefaults.
+    /// - Returns: The primary events cache if found, otherwise `nil`.
     func getPrimaryEventsCache() -> [String: [String]]? {
         return getDictionaryFromUserDefaults(forKey: "primaryCache")
     }
     
-    func saveSecondaryEventsCache(_ cache:[String: [String]]) {
-        saveDctionaryToUserDefaults(dictionary: cache, forKey: "secondaryCache")
+    /// Saves the secondary events cache to UserDefaults.
+    /// - Parameter cache: The secondary events cache to be saved.
+    func saveSecondaryEventsCache(_ cache: [String: [String]]) {
+        saveDictionaryToUserDefaults(dictionary: cache, forKey: "secondaryCache")
     }
     
+    /// Retrieves the secondary events cache from UserDefaults.
+    /// - Returns: The secondary events cache if found, otherwise `nil`.
     func getSecondaryEventsCache() -> [String: [String]]? {
         return getDictionaryFromUserDefaults(forKey: "secondaryCache")
     }
     
-   private func saveDctionaryToUserDefaults(dictionary: [String: [String]], forKey key: String) {
+    /// Saves a dictionary to UserDefaults.
+    /// - Parameters:
+    ///   - dictionary: The dictionary to be saved.
+    ///   - key: The key under which the dictionary will be stored.
+    private func saveDictionaryToUserDefaults(dictionary: [String: [String]], forKey key: String) {
         UserDefaults.standard.set(dictionary, forKey: key)
     }
     
+    /// Retrieves a dictionary from UserDefaults.
+    /// - Parameter key: The key under which the dictionary is stored.
+    /// - Returns: The dictionary if found, otherwise `nil`.
     private func getDictionaryFromUserDefaults(forKey key: String) -> [String: [String]]? {
         if let dictionary = UserDefaults.standard.dictionary(forKey: key) as? [String: [String]] {
             return dictionary
@@ -168,4 +206,3 @@ class BabulTriggerEvaluatorInteractor {
         return nil
     }
 }
-

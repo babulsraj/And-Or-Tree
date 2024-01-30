@@ -40,9 +40,9 @@ final class BabulTriggerEvaluatorInteractorTest: XCTestCase {
             throw NSError()
         }
         
-        let _ = sut.deletePath(for: "campaignIdStoring1")
+        let _ = try? sut.deletePath(for: "campaignIdStoring1")
         XCTAssertFalse(sut.doesPathExist(for: "campaignIdStoring1"))
-        let _ = sut.deletePath(for: "campaignIdStoring2")
+        let _ = try? sut.deletePath(for: "campaignIdStoring2")
         XCTAssertFalse(sut.doesPathExist(for: "campaignIdStoring2"))
     }
     

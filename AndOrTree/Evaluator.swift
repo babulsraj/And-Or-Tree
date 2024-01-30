@@ -19,24 +19,41 @@ public protocol BabulConditionEvaluator {
     func updateCampaignPaths(for campaigns:[[String:Any]])
 }
 
+/// The `BabulTriggerEvaluator` class is responsible for handling the evaluation and management of campaign paths.
+
 @objc public class BabulTriggerEvaluator: NSObject {
-   
+    
+    /// The internal handler for managing Babul campaign paths.
     private let campaignsPathHandler: BabulCampaignPathsHandler = BabulCampaignPathsHandler()
     
-    func createCampaignPaths(for campaigns:[[String:Any]]) -> Set<BabulCampaignPath> {
-        campaignsPathHandler.createCampaignPaths(for: campaigns)
+    /// Creates campaign paths based on the provided campaigns data.
+    ///
+    /// - Parameters:
+    ///   - campaigns: An array of dictionaries containing campaign information.
+    /// - Returns: A set of `BabulCampaignPath` objects representing the created campaign paths.
+    @objc func createCampaignPaths(for campaigns: [[String: Any]])  {
+         campaignsPathHandler.createCampaignPaths(for: campaigns)
     }
     
-    func evaluateConditions(for event: String, attributes:[String: Any]) -> [String]? {
+    /// Evaluates conditions for a given event and attributes, returning the corresponding campaign IDs.
+    ///
+    /// - Parameters:
+    ///   - event: The name of the event to evaluate conditions for.
+    ///   - attributes: A dictionary containing attributes related to the event.
+    /// - Returns: An array of campaign IDs that match the specified conditions.
+    @objc func evaluateConditions(for event: String, attributes: [String: Any]) -> [String]? {
         return campaignsPathHandler.evaluateConditions(for: event, attributes: attributes)
     }
     
-    func refreshPaths() {
-        // can be used to reset/delete expoired paths
+    /// Refreshes campaign paths, allowing for the reset or deletion of expired paths.
+    @objc func refreshPaths() {
+        // Implementation can be added to reset or delete expired paths.
     }
     
-    func traverseTree() {
-        //self.campaignsPathHandler.traverseTree()
-    }
+    /// Traverses the campaign tree. [Note: Commented out due to potential redundancy]
+    // @objc func traverseTree() {
+    //    self.campaignsPathHandler.traverseTree()
+    // }
 }
+
 

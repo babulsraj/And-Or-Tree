@@ -54,7 +54,7 @@ struct ContentView: View {
      }
     
     func traverse() {
-        evaluator.traverseTree()
+        //evaluator.traverseTree()
     }
 }
 
