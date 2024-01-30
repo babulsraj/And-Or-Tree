@@ -2,28 +2,28 @@
 //  Evaluator.swift
 //  AndOrTree
 //
-//  Created by MoEngage Raj on 15/12/23.
+//  Created by Babul Raj on 15/12/23.
 //
 
 import Foundation
 import UIKit
 
-protocol MoEngageConditionEvaluatorDelegateProtocol {
-   func  didFinishTriggerConditionValidation(for campaign: String, with result: Result<MoEngageTriggerConditionValidationResult,Error>)
+protocol BabulConditionEvaluatorDelegateProtocol {
+   func  didFinishTriggerConditionValidation(for campaign: String, with result: Result<BabulTriggerConditionValidationResult,Error>)
 }
 
-public protocol MoEngageConditionEvaluator {
+public protocol BabulConditionEvaluator {
     func createCampaignPaths(for campaigns:[[String:Any]])
     func evaluateConditions(for event: String, attributes:[String: Any]) -> [String]?
     func deleteEventPath(for campaign:String)
     func updateCampaignPaths(for campaigns:[[String:Any]])
 }
 
-@objc public class MoEngageTriggerEvaluator: NSObject {
+@objc public class BabulTriggerEvaluator: NSObject {
    
-    private let campaignsPathHandler: MoEngageCampaignPathsHandler = MoEngageCampaignPathsHandler()
+    private let campaignsPathHandler: BabulCampaignPathsHandler = BabulCampaignPathsHandler()
     
-    func createCampaignPaths(for campaigns:[[String:Any]]) -> Set<MoEngageCampaignPath> {
+    func createCampaignPaths(for campaigns:[[String:Any]]) -> Set<BabulCampaignPath> {
         campaignsPathHandler.createCampaignPaths(for: campaigns)
     }
     

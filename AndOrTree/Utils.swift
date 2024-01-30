@@ -2,7 +2,7 @@
 //  Utils.swift
 //  AndOrTree
 //
-//  Created by MoEngage Raj on 23/12/23.
+//  Created by Babul Raj on 23/12/23.
 //
 
 import Foundation
@@ -31,7 +31,7 @@ class Util {
         }
     }
     
-    public static func convertToArrayDict<T:MoEngageDictionaryConvertible>(input:[T]) throws -> [[String: Any]]? {
+    public static func convertToArrayDict<T:BabulDictionaryConvertible>(input:[T]) throws -> [[String: Any]]? {
          var arrayDict: [[String: Any]]? = nil
 
          do {
@@ -50,11 +50,11 @@ class Util {
 }
 
 
-public protocol MoEngageDictionaryConvertible: Codable {
+public protocol BabulDictionaryConvertible: Codable {
     func convertToDict() -> [String:Any]?
 }
 
-extension MoEngageDictionaryConvertible {
+extension BabulDictionaryConvertible {
 
     /// implement convert Struct or Class to Dictionary
     public func convertToDict() -> [String: Any]? {

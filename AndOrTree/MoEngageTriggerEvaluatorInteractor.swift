@@ -1,13 +1,13 @@
 //
-//  MoEngageTriggerEvaluatorInteractor.swift
+//  BabulTriggerEvaluatorInteractor.swift
 //  AndOrTree
 //
-//  Created by MoEngage S Raj on 15/01/24.
+//  Created by Babul S Raj on 15/01/24.
 //
 
 import Foundation
 
-enum MoEngageTriggerEvaluatorError: Error {
+enum BabulTriggerEvaluatorError: Error {
     case jsonConversionError
     case invalidPathError
     case fileWriteError(Error)
@@ -30,16 +30,16 @@ enum MoEngageTriggerEvaluatorError: Error {
     }
 }
 
-class MoEngageTriggerEvaluatorInteractor {
+class BabulTriggerEvaluatorInteractor {
     
     private var pathsFolderURL: URL? {
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         return documentsDirectory?.appendingPathComponent("CampaignPaths")
     }
     
-    func savePath(path: MoEngageCampaignPath) throws {
-        guard let json = path.convertToDict() else { throw MoEngageTriggerEvaluatorError.jsonConversionError }
-        guard let pathsFolderURL = pathsFolderURL else { throw MoEngageTriggerEvaluatorError.invalidPathError }
+    func savePath(path: BabulCampaignPath) throws {
+        guard let json = path.convertToDict() else { throw BabulTriggerEvaluatorError.jsonConversionError }
+        guard let pathsFolderURL = pathsFolderURL else { throw BabulTriggerEvaluatorError.invalidPathError }
         print(pathsFolderURL)
         
         do {
@@ -54,35 +54,35 @@ class MoEngageTriggerEvaluatorInteractor {
 
             try data.write(to: pathURL)
         } catch {
-            throw MoEngageTriggerEvaluatorError.fileWriteError(error)
+            throw BabulTriggerEvaluatorError.fileWriteError(error)
         }
     }
 
     
-    func savePaths(paths: [MoEngageCampaignPath]) throws {
+    func savePaths(paths: [BabulCampaignPath]) throws {
         try paths.forEach { try savePath(path: $0) }
     }
     
-    func getPath(for campaignId: String) throws -> MoEngageCampaignPath? {
+    func getPath(for campaignId: String) throws -> BabulCampaignPath? {
         guard let pathURL = pathsFolderURL?.appendingPathComponent("\(campaignId).json") else { return nil }
 
         do {
             let data = try Data(contentsOf: pathURL)
-            return try JSONDecoder().decode(MoEngageCampaignPath.self, from: data)
+            return try JSONDecoder().decode(BabulCampaignPath.self, from: data)
         } catch {
-            throw MoEngageTriggerEvaluatorError.fileReadError(error)
+            throw BabulTriggerEvaluatorError.fileReadError(error)
         }
     }
      
-    func getAllPaths() throws -> [MoEngageCampaignPath] {
-        guard let pathsFolderURL = pathsFolderURL else { throw MoEngageTriggerEvaluatorError.invalidPathError }
+    func getAllPaths() throws -> [BabulCampaignPath] {
+        guard let pathsFolderURL = pathsFolderURL else { throw BabulTriggerEvaluatorError.invalidPathError }
 
         do {
             let files = try FileManager.default.contentsOfDirectory(at: pathsFolderURL, includingPropertiesForKeys: nil)
             return files.compactMap { fileURL in
                 do {
                     let data = try Data(contentsOf: fileURL)
-                    return try JSONDecoder().decode(MoEngageCampaignPath.self, from: data)
+                    return try JSONDecoder().decode(BabulCampaignPath.self, from: data)
                 } catch {
                     // Handle individual file errors or log them
                     print("Error decoding file at \(fileURL): \(error)")
@@ -90,7 +90,7 @@ class MoEngageTriggerEvaluatorInteractor {
                 }
             }
         } catch {
-            throw MoEngageTriggerEvaluatorError.fileReadError(error)
+            throw BabulTriggerEvaluatorError.fileReadError(error)
         }
     }
     
@@ -119,7 +119,7 @@ class MoEngageTriggerEvaluatorInteractor {
     }
     
     func deleteAllPath() throws -> Bool {
-        guard let pathsFolderURL = pathsFolderURL else { throw MoEngageTriggerEvaluatorError.invalidPathError }
+        guard let pathsFolderURL = pathsFolderURL else { throw BabulTriggerEvaluatorError.invalidPathError }
         
         do {
             let files = try FileManager.default.contentsOfDirectory(at: pathsFolderURL, includingPropertiesForKeys: nil)
@@ -135,7 +135,7 @@ class MoEngageTriggerEvaluatorInteractor {
                 }
             }
         } catch {
-            throw MoEngageTriggerEvaluatorError.fileReadError(error)
+            throw BabulTriggerEvaluatorError.fileReadError(error)
         }
         
         return false

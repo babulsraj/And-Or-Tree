@@ -2,13 +2,13 @@
 //  PathNew.swift
 //  AndOrTree
 //
-//  Created by MoEngage S Raj on 22/01/24.
+//  Created by Babul S Raj on 22/01/24.
 //
 
 import Foundation
 
-class MoEngageCampaignPathNode: Hashable, MoEngageDictionaryConvertible {
-    static func == (lhs: MoEngageCampaignPathNode, rhs: MoEngageCampaignPathNode) -> Bool {
+class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
+    static func == (lhs: BabulCampaignPathNode, rhs: BabulCampaignPathNode) -> Bool {
         lhs.eventName == rhs.eventName
     }
     
@@ -17,9 +17,9 @@ class MoEngageCampaignPathNode: Hashable, MoEngageDictionaryConvertible {
     }
     
     let eventName: String
-    let eventType: MoEngageEventType
-    let conditionType: MoEngageConditionType
-    var nextNodes: Set<MoEngageCampaignPathNode>? = nil
+    let eventType: BabulEventType
+    let conditionType: BabulConditionType
+    var nextNodes: Set<BabulCampaignPathNode>? = nil
     let attributes: [String: JSONAny]?
     var hasMatched: Bool = false
     
@@ -36,7 +36,7 @@ class MoEngageCampaignPathNode: Hashable, MoEngageDictionaryConvertible {
         (eventType == .hasExcecuted) ? hasMatched : !hasMatched
     }
     
-    init(eventName: String, eventType: MoEngageEventType, conditionType: MoEngageConditionType, attributes: [String: Any]) {
+    init(eventName: String, eventType: BabulEventType, conditionType: BabulConditionType, attributes: [String: Any]) {
         self.eventName = eventName
         self.eventType = eventType
         self.conditionType = conditionType
@@ -53,8 +53,8 @@ class MoEngageCampaignPathNode: Hashable, MoEngageDictionaryConvertible {
     }
 }
 
-class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
-    static func == (lhs: MoEngageCampaignPath, rhs: MoEngageCampaignPath) -> Bool {
+class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
+    static func == (lhs: BabulCampaignPath, rhs: BabulCampaignPath) -> Bool {
         lhs.campaignId == rhs.campaignId
     }
 
@@ -64,20 +64,20 @@ class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
 
     let campaignId: String
     var expiry: Double
-    var path: Set<MoEngageCampaignPathNode> = []
+    var path: Set<BabulCampaignPathNode> = []
     var allowedTimeDuration: Double
     var onTimeExpiryOfHasNotExecutedEvent: ((String) -> Void)?
     private (set)var scheduler: Timer?
     private (set)var primaryOccurredTime: Double = Double.greatestFiniteMagnitude
     private (set)var hasPrimaryOccurred: Bool = false
-    var timeProvider: MoEngageTimeProvider = MoEngageEvaluatorTimeProvider()
-    private var eventMatchingResult: MoEngageConditionType?
+    var timeProvider: BabulTimeProvider = BabulEvaluatorTimeProvider()
+    private var eventMatchingResult: BabulConditionType?
 
     enum CodingKeys: String, CodingKey {
         case campaignId, expiry, path, allowedTimeDuration, primaryOccurredTime, hasPrimaryOccurred
     }
 
-    init(campaignId: String, expiry: Double, allowedTimeDuration: Double, timeProvider: MoEngageTimeProvider) {
+    init(campaignId: String, expiry: Double, allowedTimeDuration: Double, timeProvider: BabulTimeProvider) {
         self.campaignId = campaignId
         self.expiry = expiry
         self.allowedTimeDuration = allowedTimeDuration
@@ -131,7 +131,7 @@ class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
     }
     
     // #MARK: Event Matching
-   func isEventMatching(with input: MoEngageCampaignPathNode) -> Bool {
+   func isEventMatching(with input: BabulCampaignPathNode) -> Bool {
         print("evaluation called for \(input.eventName) - \(self.campaignId)")
        eventMatchingResult = nil
         
@@ -155,7 +155,7 @@ class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
         return false
     }
  
-    private  func isNodeMatching(for refNode:MoEngageCampaignPathNode, with events: Set<MoEngageCampaignPathNode>?) -> MoEngageConditionType?  {
+    private  func isNodeMatching(for refNode:BabulCampaignPathNode, with events: Set<BabulCampaignPathNode>?) -> BabulConditionType?  {
         
         guard let events = events else {
             return nil
@@ -202,7 +202,7 @@ class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
         return path.contains { isCompletePath($0, isReset: isReset) }
     }
 
-    private func isCompletePath(_ node: MoEngageCampaignPathNode, isReset: Bool = false) -> Bool {
+    private func isCompletePath(_ node: BabulCampaignPathNode, isReset: Bool = false) -> Bool {
         print("\(node.eventName) - \(node.eventType) - matched - \(node.hasMatched) - \(node.isCompleted)")
 
         if !isReset && node.eventType == .hasNotExcecuted || !node.isCompleted {
@@ -216,12 +216,12 @@ class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
         return nextNodes.contains { isCompletePath($0, isReset: isReset) }
     }
 
-    func shoulRemovePath(having event: MoEngageCampaignPathNode) -> Bool {
+    func shoulRemovePath(having event: BabulCampaignPathNode) -> Bool {
         // Implement the logic to determine if a path should be removed
         return false
     }
 
-    func shouldReset(having event: MoEngageCampaignPathNode) -> Bool {
+    func shouldReset(having event: BabulCampaignPathNode) -> Bool {
         return false
     }
 }

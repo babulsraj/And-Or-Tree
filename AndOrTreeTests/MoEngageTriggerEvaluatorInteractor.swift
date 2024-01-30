@@ -1,18 +1,18 @@
 //
-//  MoEngageTriggerEvaluatorInteractor.swift
+//  BabulTriggerEvaluatorInteractor.swift
 //  AndOrTreeTests
 //
-//  Created by MoEngage S Raj on 15/01/24.
+//  Created by Babul S Raj on 15/01/24.
 //
 
 import XCTest
 @testable import AndOrTree
 
 
-final class MoEngageTriggerEvaluatorInteractorTest: XCTestCase {
+final class BabulTriggerEvaluatorInteractorTest: XCTestCase {
 
-    let sut = MoEngageTriggerEvaluatorInteractor()
-    let pathCreator = MoEngageCampaignPathsHandler()
+    let sut = BabulTriggerEvaluatorInteractor()
+    let pathCreator = BabulCampaignPathsHandler()
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -66,7 +66,7 @@ final class MoEngageTriggerEvaluatorInteractorTest: XCTestCase {
         }
     }
     
-    func getSamplePaths() -> Set<MoEngageCampaignPath>? {
+    func getSamplePaths() -> Set<BabulCampaignPath>? {
         if let json = parseJson(fileName: "filtersCobined")  {
             let path = pathCreator.createCampaignPaths(for: json)
             return path

@@ -1,22 +1,22 @@
 //
-//  MoEngageCampaignPathsHandler.swift
+//  BabulCampaignPathsHandler.swift
 //  AndOrTree
 //
-//  Created by MoEngage S Raj on 15/01/24.
+//  Created by Babul S Raj on 15/01/24.
 //
 
 import Foundation
 
-class MoEngageCampaignPathsHandler {
+class BabulCampaignPathsHandler {
     private var primaryEvents:[String:[String]] = [:] // [PrimaryEventName:[CampaignId]]
     private var secondaryEvents:[String:[String]] = [:] // [SecondaryEventName:[CampaignId]]
-    private(set) var campaignPaths: Set<MoEngageCampaignPath> = []
-    private let pathBuilder = MoEngageTriggerPathBuilder()
-    var delegate: MoEngageConditionEvaluatorDelegateProtocol?
-    let interactor = MoEngageTriggerEvaluatorInteractor()
-    var timeProvider: MoEngageTimeProvider = MoEngageEvaluatorTimeProvider()
+    private(set) var campaignPaths: Set<BabulCampaignPath> = []
+    private let pathBuilder = BabulTriggerPathBuilder()
+    var delegate: BabulConditionEvaluatorDelegateProtocol?
+    let interactor = BabulTriggerEvaluatorInteractor()
+    var timeProvider: BabulTimeProvider = BabulEvaluatorTimeProvider()
     
-    func createCampaignPaths(for campaigns: [[String: Any]]) -> Set<MoEngageCampaignPath> {
+    func createCampaignPaths(for campaigns: [[String: Any]]) -> Set<BabulCampaignPath> {
         campaigns.forEach { campaign in
             guard let campaignId = campaign["campaignId"] as? String else { return }
             
@@ -33,7 +33,7 @@ class MoEngageCampaignPathsHandler {
     }
 
     private func createAndStoreNewPath(for campaignId: String, with campaign: [String: Any]) {
-        let campaignPath = MoEngageCampaignPath(campaignId: campaignId,
+        let campaignPath = BabulCampaignPath(campaignId: campaignId,
                                              expiry: campaign["expiry"] as? Double ?? 0.0,
                                              allowedTimeDuration: campaign["limit"] as? Double ?? 0.0,
                                              timeProvider: timeProvider)
@@ -42,13 +42,13 @@ class MoEngageCampaignPathsHandler {
         campaignPaths.insert(campaignPath)
     }
 
-    private func buildEventsCache(_ node: MoEngageCampaignPathNode, campaignId: String) -> ()? {
+    private func buildEventsCache(_ node: BabulCampaignPathNode, campaignId: String) -> ()? {
         return (node.conditionType == .primary) ?
         self.primaryEvents[node.eventName, default:[]].append(campaignId):
         self.secondaryEvents[node.eventName, default:[]].append(campaignId)
     }
     
-    private func configureCampaignPath(_ campaignPath: MoEngageCampaignPath, with campaign: [String: Any]) {
+    private func configureCampaignPath(_ campaignPath: BabulCampaignPath, with campaign: [String: Any]) {
         pathBuilder.onCreationOfNode = { [weak self] node in
             self?.buildEventsCache(node, campaignId: campaignPath.campaignId)
         }
@@ -74,9 +74,9 @@ class MoEngageCampaignPathsHandler {
             
             guard campaignIds.contains(path.campaignId) else { continue }
             
-            let conditionType: MoEngageConditionType = (primaryEvents[event] != nil) ? .primary : .secondary
+            let conditionType: BabulConditionType = (primaryEvents[event] != nil) ? .primary : .secondary
 
-            let eventNode = MoEngageCampaignPathNode(eventName: event, eventType: .hasExcecuted, conditionType: conditionType, attributes: attributes)
+            let eventNode = BabulCampaignPathNode(eventName: event, eventType: .hasExcecuted, conditionType: conditionType, attributes: attributes)
 
             if path.isEventMatching(with: eventNode), path.isPathCompleted() {
                 resultIds.append(path.campaignId)
@@ -92,9 +92,9 @@ class MoEngageCampaignPathsHandler {
         return resultIds.isEmpty ? nil : resultIds
     }
     
-    private func handleHasNotExecutedEventTimeExpiry(for campaignPath: MoEngageCampaignPath) {
+    private func handleHasNotExecutedEventTimeExpiry(for campaignPath: BabulCampaignPath) {
         if campaignPath.isPathCompleted(isReset: true) {
-            self.delegate?.didFinishTriggerConditionValidation(for: campaignPath.campaignId, with: .success(MoEngageTriggerConditionValidationResult(campaignIds: [campaignPath.campaignId])))
+            self.delegate?.didFinishTriggerConditionValidation(for: campaignPath.campaignId, with: .success(BabulTriggerConditionValidationResult(campaignIds: [campaignPath.campaignId])))
             self.savePath(campaignPath)
         } else {
             self.delegate?.didFinishTriggerConditionValidation(for: campaignPath.campaignId, with: .failure(NSError()))
@@ -102,7 +102,7 @@ class MoEngageCampaignPathsHandler {
         }
     }
     
-    private func getExistingPath(for id: String) -> MoEngageCampaignPath? {
+    private func getExistingPath(for id: String) -> BabulCampaignPath? {
         if let campaign = campaignPaths.first(where: { $0.campaignId == id }) {
             return campaign
         } else {
@@ -134,7 +134,7 @@ class MoEngageCampaignPathsHandler {
         )
     }
     
-    private func savePath( _ path: MoEngageCampaignPath) {
+    private func savePath( _ path: BabulCampaignPath) {
         do {
            try self.interactor.savePath(path: path)
         } catch {
@@ -155,13 +155,13 @@ class MoEngageCampaignPathsHandler {
         return interactor.doesPathExist(for: id) || campaignPaths.filter{$0.campaignId == id}.count > 0
     }
     
-    private func updatePath(_ path: MoEngageCampaignPath, with json: [String:Any]) {
+    private func updatePath(_ path: BabulCampaignPath, with json: [String:Any]) {
         guard let expiryVal = json["expiry"] as? Double else {return}
         path.expiry = expiryVal
         path.restart()
     }
     
-    private func saveOrDeletePath(_ path: MoEngageCampaignPath) {
+    private func saveOrDeletePath(_ path: BabulCampaignPath) {
         if path.isExpired() {
             deleteEventPath(for: path.campaignId)
         } else {
@@ -171,7 +171,7 @@ class MoEngageCampaignPathsHandler {
     
     private func deleteEventPath(for campaignId:String) {
         _ = self.interactor.deletePath(for: campaignId)
-        self.campaignPaths.remove(MoEngageCampaignPath(campaignId: campaignId, expiry: 0, allowedTimeDuration: 0, timeProvider: timeProvider))
+        self.campaignPaths.remove(BabulCampaignPath(campaignId: campaignId, expiry: 0, allowedTimeDuration: 0, timeProvider: timeProvider))
         self.deleteCampaignFrom(cache: &primaryEvents, campaignId: campaignId)
         self.deleteCampaignFrom(cache: &secondaryEvents, campaignId: campaignId)
     }
