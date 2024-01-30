@@ -2,13 +2,13 @@
 //  PathNew.swift
 //  AndOrTree
 //
-//  Created by Babul S Raj on 22/01/24.
+//  Created by MoEngage S Raj on 22/01/24.
 //
 
 import Foundation
 
-class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
-    static func == (lhs: BabulCampaignPathNode, rhs: BabulCampaignPathNode) -> Bool {
+class MoEngageCampaignPathNode: Hashable, MoEngageDictionaryConvertible {
+    static func == (lhs: MoEngageCampaignPathNode, rhs: MoEngageCampaignPathNode) -> Bool {
         lhs.eventName == rhs.eventName
     }
     
@@ -17,9 +17,9 @@ class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
     }
     
     let eventName: String
-    let eventType: EventType
-    let conditionType: ConditionType
-    var nextNodes: Set<BabulCampaignPathNode>? = nil
+    let eventType: MoEngageEventType
+    let conditionType: MoEngageConditionType
+    var nextNodes: Set<MoEngageCampaignPathNode>? = nil
     let attributes: [String: JSONAny]?
     var hasMatched: Bool = false
     
@@ -36,7 +36,7 @@ class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
         (eventType == .hasExcecuted) ? hasMatched : !hasMatched
     }
     
-    init(eventName: String, eventType: EventType, conditionType: ConditionType, attributes: [String: Any]) {
+    init(eventName: String, eventType: MoEngageEventType, conditionType: MoEngageConditionType, attributes: [String: Any]) {
         self.eventName = eventName
         self.eventType = eventType
         self.conditionType = conditionType
@@ -53,8 +53,8 @@ class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
     }
 }
 
-class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
-    static func == (lhs: BabulCampaignPath, rhs: BabulCampaignPath) -> Bool {
+class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
+    static func == (lhs: MoEngageCampaignPath, rhs: MoEngageCampaignPath) -> Bool {
         lhs.campaignId == rhs.campaignId
     }
 
@@ -64,20 +64,20 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
 
     let campaignId: String
     var expiry: Double
-    var path: Set<BabulCampaignPathNode> = []
+    var path: Set<MoEngageCampaignPathNode> = []
     var allowedTimeDuration: Double
     var onTimeExpiryOfHasNotExecutedEvent: ((String) -> Void)?
     private (set)var scheduler: Timer?
     private (set)var primaryOccurredTime: Double = Double.greatestFiniteMagnitude
     private (set)var hasPrimaryOccurred: Bool = false
-    var timeProvider: TimeProvider = ActualTimeProvider()
-    private var eventMatchingResult: ConditionType?
+    var timeProvider: MoEngageTimeProvider = MoEngageEvaluatorTimeProvider()
+    private var eventMatchingResult: MoEngageConditionType?
 
     enum CodingKeys: String, CodingKey {
         case campaignId, expiry, path, allowedTimeDuration, primaryOccurredTime, hasPrimaryOccurred
     }
 
-    init(campaignId: String, expiry: Double, allowedTimeDuration: Double, timeProvider: TimeProvider) {
+    init(campaignId: String, expiry: Double, allowedTimeDuration: Double, timeProvider: MoEngageTimeProvider) {
         self.campaignId = campaignId
         self.expiry = expiry
         self.allowedTimeDuration = allowedTimeDuration
@@ -131,7 +131,7 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
     }
     
     // #MARK: Event Matching
-   func isEventMatching(with input: BabulCampaignPathNode) -> Bool {
+   func isEventMatching(with input: MoEngageCampaignPathNode) -> Bool {
         print("evaluation called for \(input.eventName) - \(self.campaignId)")
        eventMatchingResult = nil
         
@@ -155,7 +155,7 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         return false
     }
  
-    private  func isNodeMatching(for refNode:BabulCampaignPathNode, with events: Set<BabulCampaignPathNode>?) -> ConditionType?  {
+    private  func isNodeMatching(for refNode:MoEngageCampaignPathNode, with events: Set<MoEngageCampaignPathNode>?) -> MoEngageConditionType?  {
         
         guard let events = events else {
             return nil
@@ -202,7 +202,7 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         return path.contains { isCompletePath($0, isReset: isReset) }
     }
 
-    private func isCompletePath(_ node: BabulCampaignPathNode, isReset: Bool = false) -> Bool {
+    private func isCompletePath(_ node: MoEngageCampaignPathNode, isReset: Bool = false) -> Bool {
         print("\(node.eventName) - \(node.eventType) - matched - \(node.hasMatched) - \(node.isCompleted)")
 
         if !isReset && node.eventType == .hasNotExcecuted || !node.isCompleted {
@@ -216,12 +216,12 @@ class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
         return nextNodes.contains { isCompletePath($0, isReset: isReset) }
     }
 
-    func shoulRemovePath(having event: BabulCampaignPathNode) -> Bool {
+    func shoulRemovePath(having event: MoEngageCampaignPathNode) -> Bool {
         // Implement the logic to determine if a path should be removed
         return false
     }
 
-    func shouldReset(having event: BabulCampaignPathNode) -> Bool {
+    func shouldReset(having event: MoEngageCampaignPathNode) -> Bool {
         return false
     }
 }

@@ -2,37 +2,37 @@
 //  Path.swift
 //  AndOrTree
 //
-//  Created by Babul Raj on 15/12/23.
+//  Created by MoEngage Raj on 15/12/23.
 //
 
 import Foundation
 
-struct TriggerConditionValidationResult {
+struct MoEngageTriggerConditionValidationResult {
     var campaignIds:[String]
 }
 
-enum EventType: BabulDictionaryConvertible {
+enum MoEngageEventType: MoEngageDictionaryConvertible {
     case hasExcecuted
     case hasNotExcecuted
 }
 
-enum ConditionType: BabulDictionaryConvertible {
+enum MoEngageConditionType: MoEngageDictionaryConvertible {
     case primary
     case secondary
 }
 
-protocol TimeProvider {
+protocol MoEngageTimeProvider {
     func getCurrentTime() -> Double
 }
 
-class ActualTimeProvider: TimeProvider {
+class MoEngageEvaluatorTimeProvider: MoEngageTimeProvider {
     func getCurrentTime() -> Double {
         return Date().timeIntervalSince1970
     }
 }
 
-/*class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
-    static func == (lhs: BabulCampaignPathNode, rhs: BabulCampaignPathNode) -> Bool {
+/*class MoEngageCampaignPathNode: Hashable, MoEngageDictionaryConvertible {
+    static func == (lhs: MoEngageCampaignPathNode, rhs: MoEngageCampaignPathNode) -> Bool {
         lhs.eventName == rhs.eventName
     }
     
@@ -42,9 +42,9 @@ class ActualTimeProvider: TimeProvider {
     
     var timeOccurred: Double? = nil
     let eventName: String
-    let eventType: EventType
-    let conditionType: ConditionType
-    var nextNodes: Set<BabulCampaignPathNode>? = nil
+    let eventType: MoEngageEventType
+    let conditionType: MoEngageConditionType
+    var nextNodes: Set<MoEngageCampaignPathNode>? = nil
     var attributes: [String: JSONAny]?
     var hasMatched: Bool = false
     
@@ -62,7 +62,7 @@ class ActualTimeProvider: TimeProvider {
         (eventType == .hasExcecuted) ? hasMatched : !hasMatched
     }
     
-    init(eventName: String, eventType: EventType, conditionType: ConditionType, attributes: [String: Any]) {
+    init(eventName: String, eventType: MoEngageEventType, conditionType: MoEngageConditionType, attributes: [String: Any]) {
         self.eventName = eventName
         self.eventType = eventType
         self.conditionType = conditionType
@@ -70,7 +70,7 @@ class ActualTimeProvider: TimeProvider {
         self.nextNodes = Set()
     }
 
-    func findMatchingNode(_ inputNode: BabulCampaignPathNode) -> BabulCampaignPathNode? {
+    func findMatchingNode(_ inputNode: MoEngageCampaignPathNode) -> MoEngageCampaignPathNode? {
         if inputNode.eventName == self.eventName {
             self.hasMatched = true
             return self
@@ -87,8 +87,8 @@ class ActualTimeProvider: TimeProvider {
 }*/
 
 
-/*class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
-    static func == (lhs: BabulCampaignPath, rhs: BabulCampaignPath) -> Bool {
+/*class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
+    static func == (lhs: MoEngageCampaignPath, rhs: MoEngageCampaignPath) -> Bool {
         lhs.campaignId == rhs.campaignId
     }
 
@@ -98,14 +98,14 @@ class ActualTimeProvider: TimeProvider {
 
     var campaignId: String
     let expiry: Double
-    var path: Set<BabulCampaignPathNode> = []
+    var path: Set<MoEngageCampaignPathNode> = []
     var allowedTimeDuration: Double
     var onTimeExpiryOfHasNotExecutedEvent: ((String) -> Void)?
     private var scheduler: Timer?
     private var primaryOccurredTime: Double = 0
     private var hasPrimaryOccurred: Bool = false
     var timeProvider: TimeProvider?
-    private var result: BabulCampaignPathNode?
+    private var result: MoEngageCampaignPathNode?
     
     enum CodingKeys: String, CodingKey {
         case campaignId, expiry, path, allowedTimeDuration, primaryOccurredTime, hasPrimaryOccurred
@@ -143,7 +143,7 @@ class ActualTimeProvider: TimeProvider {
         reset(shouldResetPrimary: true)
     }
 
-    func isEventMatching(with input: BabulCampaignPathNode) -> Bool {
+    func isEventMatching(with input: MoEngageCampaignPathNode) -> Bool {
         guard let matchingNode = getMatchingNode(for: input, with: path)/*path.compactMap({ $0.findMatchingNode(input) }).first*/ else {
             return false
         }
@@ -152,7 +152,7 @@ class ActualTimeProvider: TimeProvider {
         return true
     }
     
-    private  func getMatchingNode(for refNode:BabulCampaignPathNode ,with events: Set<BabulCampaignPathNode>?) -> BabulCampaignPathNode?  {
+    private  func getMatchingNode(for refNode:MoEngageCampaignPathNode ,with events: Set<MoEngageCampaignPathNode>?) -> MoEngageCampaignPathNode?  {
          
          guard let events = events else {
              return nil
@@ -189,7 +189,7 @@ class ActualTimeProvider: TimeProvider {
         return false
     }
 
-    private func isCompletePath(_ node: BabulCampaignPathNode, isReset: Bool = false) -> Bool {
+    private func isCompletePath(_ node: MoEngageCampaignPathNode, isReset: Bool = false) -> Bool {
         if !node.isCompleted {
             return false
         }
@@ -201,7 +201,7 @@ class ActualTimeProvider: TimeProvider {
         }
     }
 
-    private func updatePrimaryNodeStatus(_ node: BabulCampaignPathNode) {
+    private func updatePrimaryNodeStatus(_ node: MoEngageCampaignPathNode) {
         if node.conditionType == .primary {
             primaryOccurredTime = Date().timeIntervalSince1970
             hasPrimaryOccurred = true
@@ -209,12 +209,12 @@ class ActualTimeProvider: TimeProvider {
         }
     }
 
-    func shoulRemovePath(having event: BabulCampaignPathNode) -> Bool {
+    func shoulRemovePath(having event: MoEngageCampaignPathNode) -> Bool {
         // Implement the logic to determine if a path should be removed
         return false
     }
 
-    func shouldReset(having event: BabulCampaignPathNode) -> Bool {
+    func shouldReset(having event: MoEngageCampaignPathNode) -> Bool {
         // Implement the logic to determine if a path should be reset
         return false
     }
@@ -222,8 +222,8 @@ class ActualTimeProvider: TimeProvider {
 
 
 
-/*class BabulCampaignPathNode: Hashable, BabulDictionaryConvertible {
-    static func == (lhs: BabulCampaignPathNode, rhs: BabulCampaignPathNode) -> Bool {
+/*class MoEngageCampaignPathNode: Hashable, MoEngageDictionaryConvertible {
+    static func == (lhs: MoEngageCampaignPathNode, rhs: MoEngageCampaignPathNode) -> Bool {
         lhs.eventName == rhs.eventName
     }
     
@@ -233,9 +233,9 @@ class ActualTimeProvider: TimeProvider {
     
     var timeOccured: Double? = nil
     let eventName: String
-    let eventType: EventType
-    let conditionType: ConditionType
-    var nextNodes: Set<BabulCampaignPathNode>? = nil
+    let eventType: MoEngageEventType
+    let conditionType: MoEngageConditionType
+    var nextNodes: Set<MoEngageCampaignPathNode>? = nil
     var attributes: [String:JSONAny]?
     var hasMatched:Bool = false
     
@@ -253,8 +253,8 @@ class ActualTimeProvider: TimeProvider {
         case hasMatched
     }
 
-    init(eventName: String, eventType: EventType, conditionType: ConditionType, attributes:[String:Any],
-         nextNodes: Set<BabulCampaignPathNode> = []) {
+    init(eventName: String, eventType: MoEngageEventType, conditionType: MoEngageConditionType, attributes:[String:Any],
+         nextNodes: Set<MoEngageCampaignPathNode> = []) {
         self.eventName = eventName
         self.eventType = eventType
         self.conditionType = conditionType
@@ -263,9 +263,9 @@ class ActualTimeProvider: TimeProvider {
     }
 }*/
 
-//class BabulCampaignPath: Hashable, BabulDictionaryConvertible {
+//class MoEngageCampaignPath: Hashable, MoEngageDictionaryConvertible {
 //    
-//    static func == (lhs: BabulCampaignPath, rhs: BabulCampaignPath) -> Bool {
+//    static func == (lhs: MoEngageCampaignPath, rhs: MoEngageCampaignPath) -> Bool {
 //        return lhs.campaignId == rhs.campaignId
 //    }
 //    
@@ -275,14 +275,14 @@ class ActualTimeProvider: TimeProvider {
 //    
 //    var campaignId:String
 //    let expiry: Double
-//    var path: Set<BabulCampaignPathNode> = []
+//    var path: Set<MoEngageCampaignPathNode> = []
 //    var allowedTimeDuration: Double
 //    var onTimeExpiryOfHasNotExecutedEvent:((String)->())?
 //    private var scheduler: Timer?
 //    private var primaryOccuredTime: Double = 0
 //    private var hasPrimaryOccured:Bool = false
 //    var timeProvider: TimeProvider?
-//    private var result:BabulCampaignPathNode?  = nil
+//    private var result:MoEngageCampaignPathNode?  = nil
 //    
 //    enum CodingKeys: String, CodingKey {
 //        case campaignId
@@ -318,7 +318,7 @@ class ActualTimeProvider: TimeProvider {
 //        }
 //    }
 //    
-//   private  func getMatchingNode(for refNode:BabulCampaignPathNode ,with events: Set<BabulCampaignPathNode>?) -> BabulCampaignPathNode?  {
+//   private  func getMatchingNode(for refNode:MoEngageCampaignPathNode ,with events: Set<MoEngageCampaignPathNode>?) -> MoEngageCampaignPathNode?  {
 //        
 //        guard let events = events else {
 //            return nil
@@ -342,7 +342,7 @@ class ActualTimeProvider: TimeProvider {
 //        resetAllNodes(nodes: path, shouldResetPrimary: shouldResetPrimary)
 //    }
 //    
-//    private func resetAllNodes(nodes: Set<BabulCampaignPathNode>?, shouldResetPrimary: Bool) {
+//    private func resetAllNodes(nodes: Set<MoEngageCampaignPathNode>?, shouldResetPrimary: Bool) {
 //        guard let events = nodes else {
 //            return
 //        }
@@ -358,7 +358,7 @@ class ActualTimeProvider: TimeProvider {
 //        }
 //    }
 //    
-//    func isEventMatching(with input: BabulCampaignPathNode) -> Bool{
+//    func isEventMatching(with input: MoEngageCampaignPathNode) -> Bool{
 //        // check for max duration can also be done here
 //        // go through all the modes and check for match
 //        
@@ -401,11 +401,11 @@ class ActualTimeProvider: TimeProvider {
 //        }
 //    }
 //    
-//    func shoulRemovePath(having event: BabulCampaignPathNode) -> Bool {
+//    func shoulRemovePath(having event: MoEngageCampaignPathNode) -> Bool {
 //        return false
 //    }
 //    
-//    func shouldReset(having event: BabulCampaignPathNode) -> Bool {
+//    func shouldReset(having event: MoEngageCampaignPathNode) -> Bool {
 //        return false
 //    }
 //    
@@ -420,7 +420,7 @@ class ActualTimeProvider: TimeProvider {
 //        return false
 //    }
 //    
-//    private func isCompletePath(_ node: BabulCampaignPathNode, isReset: Bool = false) -> Bool {
+//    private func isCompletePath(_ node: MoEngageCampaignPathNode, isReset: Bool = false) -> Bool {
 //        if !isReset && node.eventType == .hasNotExcecuted {
 //            return false
 //        }

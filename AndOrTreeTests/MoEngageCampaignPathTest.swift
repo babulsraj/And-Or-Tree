@@ -1,24 +1,24 @@
 //
-//  BabulCampaignPathTest.swift
+//  MoEngageCampaignPathTest.swift
 //  AndOrTreeTests
 //
-//  Created by Babul S Raj on 22/01/24.
+//  Created by MoEngage S Raj on 22/01/24.
 //
 
 import XCTest
 @testable import AndOrTree
 
-final class BabulCampaignPathTest: XCTestCase {
+final class MoEngageCampaignPathTest: XCTestCase {
 
-    var sut: BabulCampaignPath = BabulCampaignPath(campaignId: "Campaigid1", expiry: 12345, allowedTimeDuration: 3, timeProvider: MockTimeProvider())
+    var sut: MoEngageCampaignPath = MoEngageCampaignPath(campaignId: "Campaigid1", expiry: 12345, allowedTimeDuration: 3, timeProvider: MockTimeProvider())
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
        // 1||2 (1||2) & (3||4) 4 is HNE
         guard let json = TestUtil.parseJson(fileName: "filtersORAndHNE")?.first else {throw NSError(domain: "omg", code: 404)}
-        guard let path = BabulTriggerPathBuilder().buildCompletePath(for: sut.campaignId, with: json) else {throw NSError(domain: "omg", code: 405)}
+        guard let path = MoEngageTriggerPathBuilder().buildCompletePath(for: sut.campaignId, with: json) else {throw NSError(domain: "omg", code: 405)}
         sut.path = path
-        sut.timeProvider = ActualTimeProvider()
+        sut.timeProvider = MoEngageEvaluatorTimeProvider()
     }
 
     override func tearDownWithError() throws {
@@ -26,15 +26,15 @@ final class BabulCampaignPathTest: XCTestCase {
     }
     
     func testIsEventMatchingWith() throws {
-        let node = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
         let result = sut.isEventMatching(with: node)
         XCTAssertEqual(result, true)
         XCTAssertTrue(sut.hasPrimaryOccurred)
     }
   
     func testIsEventMatchingWith1() {
-        let primaryNode =  BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
-        let node = BabulCampaignPathNode(eventName: "Secondary4", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let primaryNode =  MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node = MoEngageCampaignPathNode(eventName: "Secondary4", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
         _ = sut.isEventMatching(with: primaryNode)
         let result = sut.isEventMatching(with: node)
         XCTAssertEqual(result, true)
@@ -42,8 +42,8 @@ final class BabulCampaignPathTest: XCTestCase {
     }
     
     func testIsEventMatchingBeforePrimaryOccurred() throws {
-        _ =  BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
-        let node = BabulCampaignPathNode(eventName: "Secondary4", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        _ =  MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node = MoEngageCampaignPathNode(eventName: "Secondary4", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
         let result = sut.isEventMatching(with: node)
         XCTAssertEqual(result, false)
         XCTAssertFalse(sut.hasPrimaryOccurred)
@@ -53,7 +53,7 @@ final class BabulCampaignPathTest: XCTestCase {
         let expectation1 = self.expectation(description: "1111")
         expectation1.expectedFulfillmentCount = 1
         
-        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node1 = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
         _ = sut.isEventMatching(with: node1)
         
         sut.onTimeExpiryOfHasNotExecutedEvent = { id in
@@ -64,16 +64,16 @@ final class BabulCampaignPathTest: XCTestCase {
     }
     
     func testPathResetWhenPrimaryOccursAgain() {
-        let primary1 =  BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let primary1 =  MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
         let _ = sut.isEventMatching(with: primary1)
        
-        let node = BabulCampaignPathNode(eventName: "Secondary4", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node = MoEngageCampaignPathNode(eventName: "Secondary4", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
         let result = sut.isEventMatching(with: node)
        
         XCTAssertEqual(result, true)
         XCTAssertTrue(sut.scheduler?.isValid ?? false)
         
-        let primary2 =  BabulCampaignPathNode(eventName: "Primary2", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let primary2 =  MoEngageCampaignPathNode(eventName: "Primary2", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
         sleep(1)
         let _ = sut.isEventMatching(with: primary2)
         
@@ -83,9 +83,9 @@ final class BabulCampaignPathTest: XCTestCase {
     }
     
     func testIsPathCompleted() {
-        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
-        let node2 = BabulCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
-        let node3 = BabulCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node1 = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node2 = MoEngageCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node3 = MoEngageCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
        
         _ = sut.isEventMatching(with: node1)
         _ = sut.isEventMatching(with: node2)
@@ -96,9 +96,9 @@ final class BabulCampaignPathTest: XCTestCase {
     
     func testPathResetAfterPathCompletion() {
         
-        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
-        let node2 = BabulCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
-        let node3 = BabulCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node1 = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node2 = MoEngageCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node3 = MoEngageCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
        
         _ = sut.isEventMatching(with: node1)
         _ = sut.isEventMatching(with: node2)
@@ -115,7 +115,7 @@ final class BabulCampaignPathTest: XCTestCase {
         expectation1.expectedFulfillmentCount = 1
         var campaignId = ""
        
-        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node1 = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
         _ = sut.isEventMatching(with: node1)
         
         sut.onTimeExpiryOfHasNotExecutedEvent = { id in
@@ -145,8 +145,8 @@ final class BabulCampaignPathTest: XCTestCase {
         let expectation1 = self.expectation(description: "1111")
         expectation1.expectedFulfillmentCount = 1
         
-        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
-        let node2 = BabulCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node1 = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node2 = MoEngageCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
        
         _ = sut.isEventMatching(with: node1)
         _ = sut.isEventMatching(with: node2)
@@ -163,9 +163,9 @@ final class BabulCampaignPathTest: XCTestCase {
     
     func testPathCompletedOnEventOcuurance() {
         
-        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
-        let node2 = BabulCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
-        let node3 = BabulCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node1 = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node2 = MoEngageCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node3 = MoEngageCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
         
         _ = sut.isEventMatching(with: node1)
         _ = sut.isEventMatching(with: node2)
@@ -180,10 +180,10 @@ final class BabulCampaignPathTest: XCTestCase {
         expectation1.expectedFulfillmentCount = 1
         
         
-        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node1 = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
         _ = sut.isEventMatching(with: node1)
         
-        let node2 = BabulCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node2 = MoEngageCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
         _ = sut.isEventMatching(with: node2)
         
         
@@ -203,9 +203,9 @@ final class BabulCampaignPathTest: XCTestCase {
         sut.timeProvider = mockTimer
 
         
-        let node1 = BabulCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
-        let node2 = BabulCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
-        let node3 = BabulCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node1 = MoEngageCampaignPathNode(eventName: "Primary1", eventType: .hasExcecuted, conditionType: .primary, attributes: [:])
+        let node2 = MoEngageCampaignPathNode(eventName: "Secondary1", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
+        let node3 = MoEngageCampaignPathNode(eventName: "Secondary3", eventType: .hasExcecuted, conditionType: .secondary, attributes: [:])
        
         
         _ = sut.isEventMatching(with: node1)

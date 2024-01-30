@@ -2,7 +2,7 @@
 //  Logic.swift
 //  AndOrTree
 //
-//  Created by Babul Raj on 02/12/23.
+//  Created by MoEngage Raj on 02/12/23.
 //
 
 import Foundation
@@ -56,7 +56,7 @@ class Tracker {
 }
 
 
-//func createCampaignPaths1(for campaigns:[[String:Any]]) -> Set<BabulCampaignPath> {
+//func createCampaignPaths1(for campaigns:[[String:Any]]) -> Set<MoEngageCampaignPath> {
 //    for campaign in campaigns {
 //        guard let campaignId = campaign["campaignId"] as? String else { continue }
 //        
@@ -66,7 +66,7 @@ class Tracker {
 //            continue
 //        }
 //       
-//        let campainPath = BabulCampaignPath(campaignId: campaign["campaignId"] as?  String ?? "", expiry: campaign["expiry"] as? Double ?? 0.0, allowedTimeDuration: campaign["limit"] as? Double ?? 0.0)
+//        let campainPath = MoEngageCampaignPath(campaignId: campaign["campaignId"] as?  String ?? "", expiry: campaign["expiry"] as? Double ?? 0.0, allowedTimeDuration: campaign["limit"] as? Double ?? 0.0)
 //        
 //        pathBuilder.onCreationOfNode = { [weak self] node in
 //            (node.conditionType == .primary) ?
@@ -93,8 +93,8 @@ class Tracker {
 
 //func evaluateConditions1(for event: String, attributes:[String: Any]) -> [String]? {
 //    var ids:[String]?
-//    var paths:[BabulCampaignPath]? = nil
-//    var conditionType: ConditionType? = nil
+//    var paths:[MoEngageCampaignPath]? = nil
+//    var conditionType: MoEngageConditionType? = nil
 //    
 //    if let campaignIds = primaryEvents[event] {
 //        paths = self.campaignPaths.filter {campaignIds.contains($0.campaignId)}
@@ -106,7 +106,7 @@ class Tracker {
 //    
 //    guard let paths = paths, let conditionType = conditionType else {return nil}
 //    
-//    let event = BabulCampaignPathNode(eventName: event, eventType: .hasExcecuted, conditionType: conditionType, attributes: attributes)
+//    let event = MoEngageCampaignPathNode(eventName: event, eventType: .hasExcecuted, conditionType: conditionType, attributes: attributes)
 //    // let paths = self.campaignPaths.filter {$0.allNodes.contains(event)}
 //
 //    for path in paths {
@@ -134,9 +134,9 @@ class Tracker {
 //    guard let campaignIds = primaryEvents[event] ?? secondaryEvents[event] else { return nil }
 //    
 //    let paths = campaignPaths.filter { campaignIds.contains($0.campaignId) }
-//    let conditionType: ConditionType = (primaryEvents[event] != nil) ? .primary : .secondary
+//    let conditionType: MoEngageConditionType = (primaryEvents[event] != nil) ? .primary : .secondary
 //
-//    let eventNode = BabulCampaignPathNode(eventName: event, eventType: .hasExcecuted, conditionType: conditionType, attributes: attributes)
+//    let eventNode = MoEngageCampaignPathNode(eventName: event, eventType: .hasExcecuted, conditionType: conditionType, attributes: attributes)
 //
 //    let ids = paths
 //        .filter { path in path.isEventMatching(with: eventNode) && path.isPathCompleted() }
@@ -164,7 +164,7 @@ class Tracker {
 //}
 
 
-//private func isCompletePath1(_ node: BabulCampaignPathNode, isReset: Bool = false) -> Bool {
+//private func isCompletePath1(_ node: MoEngageCampaignPathNode, isReset: Bool = false) -> Bool {
 //    print("\(node.eventName) - \(node.eventType) - matched - \(node.hasMatched) -  \(node.isCompleted)")
 //    if !isReset && node.eventType == .hasNotExcecuted {
 //        return false

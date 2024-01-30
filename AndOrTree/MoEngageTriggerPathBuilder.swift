@@ -1,18 +1,18 @@
 //
-//  BabulTriggerPathBuilder.swift
+//  MoEngageTriggerPathBuilder.swift
 //  AndOrTree
 //
-//  Created by Babul S Raj on 15/01/24.
+//  Created by MoEngage S Raj on 15/01/24.
 //
 
 import Foundation
 
 
-class BabulTriggerPathBuilder {
+class MoEngageTriggerPathBuilder {
     
-    var onCreationOfNode: ((BabulCampaignPathNode) -> ())? = nil
+    var onCreationOfNode: ((MoEngageCampaignPathNode) -> ())? = nil
     
-    func buildCompletePath(for id: String, with json: [String:Any]) -> Set<BabulCampaignPathNode>? {
+    func buildCompletePath(for id: String, with json: [String:Any]) -> Set<MoEngageCampaignPathNode>? {
         
         guard let aa = json["primaryCondition"] as? [String:Any], let bb = aa["included_filters"] as? [String:Any] else {return nil}
         guard let cc = formCampaignPath(for: id, inputJson: bb, conditionType: .primary) else {return nil}
@@ -24,11 +24,11 @@ class BabulTriggerPathBuilder {
     }
     
     
-    private func formCampaignPath(for id: String, inputJson: [String:Any], conditionType: ConditionType) -> Set<BabulCampaignPathNode>? {
+    private func formCampaignPath(for id: String, inputJson: [String:Any], conditionType: MoEngageConditionType) -> Set<MoEngageCampaignPathNode>? {
         guard let _ = inputJson["filterOperator"] else {
             guard let eventName = inputJson["action_name"] as? String, let attributes = inputJson["attributes"] as? [String:Any] else {return nil}
-            let hasExecuted: EventType = (inputJson["executed"] as? Bool ?? true) ? .hasExcecuted : .hasNotExcecuted
-            let node = BabulCampaignPathNode(eventName: eventName, eventType: hasExecuted, conditionType: conditionType ,attributes: attributes)
+            let hasExecuted: MoEngageEventType = (inputJson["executed"] as? Bool ?? true) ? .hasExcecuted : .hasNotExcecuted
+            let node = MoEngageCampaignPathNode(eventName: eventName, eventType: hasExecuted, conditionType: conditionType ,attributes: attributes)
             onCreationOfNode?(node)
 
             return  Set([node])
@@ -36,7 +36,7 @@ class BabulTriggerPathBuilder {
         
         guard let filterOperator = inputJson["filterOperator"] as? String else {return nil}
         guard let filters = inputJson["filters"] as? [[String:Any]] else {return nil}
-        var eventPath = Set([BabulCampaignPathNode]())
+        var eventPath = Set([MoEngageCampaignPathNode]())
         
         for filter in filters {
             guard let eventNode = formCampaignPath(for: id, inputJson: filter, conditionType: conditionType) else {return nil}
@@ -52,14 +52,14 @@ class BabulTriggerPathBuilder {
             }
         }
         
-        return Set<BabulCampaignPathNode>(eventPath)
+        return Set<MoEngageCampaignPathNode>(eventPath)
     }
  
-    private func joinNodesWithAND(node1: Set<BabulCampaignPathNode>, node2: Set<BabulCampaignPathNode>) -> Set<BabulCampaignPathNode> {
-        var result = Set<BabulCampaignPathNode>()
+    private func joinNodesWithAND(node1: Set<MoEngageCampaignPathNode>, node2: Set<MoEngageCampaignPathNode>) -> Set<MoEngageCampaignPathNode> {
+        var result = Set<MoEngageCampaignPathNode>()
         for eventNode in node1 {
             let backUp = eventNode
-            var newEventNode: BabulCampaignPathNode = eventNode
+            var newEventNode: MoEngageCampaignPathNode = eventNode
             
             while newEventNode.nextNodes?.count ?? 0 > 0  {
                 newEventNode = (newEventNode.nextNodes?.first)!

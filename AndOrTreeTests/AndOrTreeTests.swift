@@ -2,7 +2,7 @@
 //  AndOrTreeTests.swift
 //  AndOrTreeTests
 //
-//  Created by Babul Raj on 02/12/23.
+//  Created by MoEngage Raj on 02/12/23.
 //
 
 import XCTest
@@ -10,7 +10,7 @@ import XCTest
 
 final class AndOrTreeTests: XCTestCase {
 
-    let sut = BabulCampaignPathsHandler()
+    let sut = MoEngageCampaignPathsHandler()
     
     override func setUpWithError() throws {
        try? sut.interactor.deleteAllPath()
@@ -437,7 +437,7 @@ final class AndOrTreeTests: XCTestCase {
                 print("Error writing data to file: \(error)")
             }
             
-            if let path: BabulCampaignPath? = Util.getObject(input: json) {
+            if let path: MoEngageCampaignPath? = Util.getObject(input: json) {
                 print(path)
             }
             
@@ -502,7 +502,7 @@ final class AndOrTreeTests: XCTestCase {
     //  P3 || P4 &  5&6(3||7) - May8
     func testPathCompletionAfterKillAndRelaunch() throws {
         var timeProvider = MockTimeProvider()
-        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+        var optionalsut: MoEngageCampaignPathsHandler? = MoEngageCampaignPathsHandler()
 
         if let json = TestUtil.parseJson(fileName: "CombinedWithExpiry")  {
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
@@ -513,7 +513,7 @@ final class AndOrTreeTests: XCTestCase {
             let id2 = optionalsut?.evaluateConditions(for: "Secondary1", attributes: [:])
            
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(600)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -521,7 +521,7 @@ final class AndOrTreeTests: XCTestCase {
             let id21 = optionalsut?.evaluateConditions(for: "Secondary2", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(1000)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -531,14 +531,14 @@ final class AndOrTreeTests: XCTestCase {
             let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             optionalsut?.refreshPaths()
             
             let id5 =  optionalsut?.evaluateConditions(for: "Secondary5", attributes: [:])
             let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(1003)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -569,7 +569,7 @@ final class AndOrTreeTests: XCTestCase {
     //  P3 || P4 &  5&6(3||7) - May8
     func testCampaignExpiryAfterKillAndRelaunch() throws {
         let timeProvider = MockTimeProvider()
-        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+        var optionalsut: MoEngageCampaignPathsHandler? = MoEngageCampaignPathsHandler()
 
         if let json = TestUtil.parseJson(fileName: "CombinedWithExpiry")  {
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
@@ -581,7 +581,7 @@ final class AndOrTreeTests: XCTestCase {
             let id2 = optionalsut?.evaluateConditions(for: "Secondary1", attributes: [:])
            
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(300)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -589,7 +589,7 @@ final class AndOrTreeTests: XCTestCase {
             let id21 = optionalsut?.evaluateConditions(for: "Secondary2", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(7300)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -602,7 +602,7 @@ final class AndOrTreeTests: XCTestCase {
             let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(7300)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -612,7 +612,7 @@ final class AndOrTreeTests: XCTestCase {
             let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(6048)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -640,7 +640,7 @@ final class AndOrTreeTests: XCTestCase {
     //  P3 || P4 &  5&6 & (3||7) - May8
     func testSecondaryTimeExpiryAfterKillAndRelaunch() throws {
         let timeProvider = MockTimeProvider()
-        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+        var optionalsut: MoEngageCampaignPathsHandler? = MoEngageCampaignPathsHandler()
         
         if let json = TestUtil.parseJson(fileName: "CombinedWithExpiry")  {
             let paths = optionalsut?.createCampaignPaths(for: json)
@@ -650,7 +650,7 @@ final class AndOrTreeTests: XCTestCase {
             let id2 = optionalsut?.evaluateConditions(for: "Secondary1", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(3600)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -658,7 +658,7 @@ final class AndOrTreeTests: XCTestCase {
             let id21 = optionalsut?.evaluateConditions(for: "Secondary2", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(8400) // expiring primary1
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -670,7 +670,7 @@ final class AndOrTreeTests: XCTestCase {
             let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(2)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -680,7 +680,7 @@ final class AndOrTreeTests: XCTestCase {
             let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
             
@@ -708,7 +708,7 @@ final class AndOrTreeTests: XCTestCase {
     
     func testPatheGettingFormedAtDifferentTimesAndPathCompletion() throws {
         let timeProvider = MockTimeProvider()
-        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+        var optionalsut: MoEngageCampaignPathsHandler? = MoEngageCampaignPathsHandler()
 
         if let json = TestUtil.parseJson(fileName: "CombinedWithExpiry")  {
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
@@ -720,7 +720,7 @@ final class AndOrTreeTests: XCTestCase {
             let id2 = optionalsut?.evaluateConditions(for: "Secondary1", attributes: [:])
            
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(300)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -728,7 +728,7 @@ final class AndOrTreeTests: XCTestCase {
             let id21 = optionalsut?.evaluateConditions(for: "Secondary2", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(7300)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -741,7 +741,7 @@ final class AndOrTreeTests: XCTestCase {
             let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(7300)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -764,7 +764,7 @@ final class AndOrTreeTests: XCTestCase {
             let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(6048)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -776,7 +776,7 @@ final class AndOrTreeTests: XCTestCase {
             
       
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             timeProvider.date = Date().addingTimeInterval(7100)
             optionalsut?.timeProvider = timeProvider
             optionalsut?.refreshPaths()
@@ -809,7 +809,7 @@ final class AndOrTreeTests: XCTestCase {
     //  P3 || P4 &  5&6 & (3||7) - May8 3 is HNE
     func testSecondaryPathCompletionWithHNEOnKillAndRelaunch() throws {
         let timeProvider = MockTimeProvider()
-        var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()
+        var optionalsut: MoEngageCampaignPathsHandler? = MoEngageCampaignPathsHandler()
         
         
         
@@ -825,7 +825,7 @@ final class AndOrTreeTests: XCTestCase {
             let id4 =  optionalsut?.evaluateConditions(for: "Primary3", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             optionalsut?.refreshPaths()
             XCTAssertEqual(optionalsut?.campaignPaths.count, 2)
             
@@ -833,7 +833,7 @@ final class AndOrTreeTests: XCTestCase {
             let id6 =  optionalsut?.evaluateConditions(for: "Secondary6", attributes: [:])
             
             optionalsut = nil
-            optionalsut = BabulCampaignPathsHandler()
+            optionalsut = MoEngageCampaignPathsHandler()
             optionalsut?.delegate = delegate
             optionalsut?.timeProvider = timeProvider
             timeProvider.date = Date().addingTimeInterval(1995)
@@ -863,7 +863,7 @@ final class AndOrTreeTests: XCTestCase {
 }
 
 
-class MockTimeProvider: TimeProvider {
+class MockTimeProvider: MoEngageTimeProvider {
     var date: Date?
    
     func getCurrentTime() -> Double {
@@ -873,7 +873,7 @@ class MockTimeProvider: TimeProvider {
     }
  }
 
-class Mockdelegate: BabulConditionEvaluatorDelegateProtocol {
+class Mockdelegate: MoEngageConditionEvaluatorDelegateProtocol {
     var campaignid: String?
     var exp: XCTestExpectation
     
@@ -881,7 +881,7 @@ class Mockdelegate: BabulConditionEvaluatorDelegateProtocol {
         self.exp = exp
     }
     
-    func didFinishTriggerConditionValidation(for campaign: String, with result: Result<AndOrTree.TriggerConditionValidationResult, Error>) {
+    func didFinishTriggerConditionValidation(for campaign: String, with result: Result<AndOrTree.MoEngageTriggerConditionValidationResult, Error>) {
         switch result {
         case .success(_):
             self.campaignid = campaign

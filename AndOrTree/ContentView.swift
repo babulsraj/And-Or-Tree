@@ -2,14 +2,14 @@
 //  ContentView.swift
 //  AndOrTree
 //
-//  Created by Babul Raj on 02/12/23.
+//  Created by MoEngage Raj on 02/12/23.
 //
 
 import SwiftUI
 
 ///nodoc
 struct ContentView: View {
-    let evaluator = BabulTriggerEvaluator()
+    let evaluator = MoEngageTriggerEvaluator()
     var body: some View {
         VStack {
             Image(systemName: "globe")
