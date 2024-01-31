@@ -319,7 +319,7 @@ class BabulCampaignPathsHandler {
     }
     
     private func getCampaignId(from campaign: [String:Any]?) -> String? {
-        guard let jsonObject = campaign as? [String: Any], let campaignId = jsonObject["campaign_id"] as? String else  {
+        guard let jsonObject = campaign, let campaignId = jsonObject["campaign_id"] as? String else  {
             return nil
         }
         

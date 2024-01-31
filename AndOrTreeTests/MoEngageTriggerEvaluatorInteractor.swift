@@ -15,6 +15,7 @@ final class BabulTriggerEvaluatorInteractorTest: XCTestCase {
     let pathCreator = BabulCampaignPathsHandler()
 
     override func setUpWithError() throws {
+        try? sut.deleteAllPath()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 

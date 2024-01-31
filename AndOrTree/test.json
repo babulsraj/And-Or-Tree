@@ -1,147 +1,152 @@
 [
     {
-        "campaignId": "onlyOR",
-        "expiry":1744113600,
-        "primaryCondition": {
-            "included_filters": {
-                "filterOperator": "or",
-                "filters": [
-                    {
-                        "action_name": "Primary1",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 1,
-                            "type": "atleast"
+        "campaign_id": "onlyOR",
+        "expiry_time": "2025-04-08T00:00:00",
+        "trigger": {
+            "primary_condition": {
+                "included_filters": {
+                    "filter_operator": "or",
+                    "filters": [
+                        {
+                            "action_name": "Primary1",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
                         },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
-                        }
-                    },
-                    {
-                        "action_name": "Primary2",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 1,
-                            "type": "atleast"
+                        {
+                            "action_name": "Primary2",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
                         },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
+                        {
+                            "action_name": "Primary3",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
                         }
-                    },
-                    {
-                        "action_name": "Primary3",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 1,
-                            "type": "atleast"
-                        },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
-                        }
-                    }
-                ]
+                    ]
+                }
             }
         }
     },
     {
-        "campaignId": "onlyAnd",
-        "expiry":1744113600,
-        "primaryCondition": {
-            "included_filters": {
-                "filterOperator": "or",
-                "filters": [
-                    {
-                        "action_name": "Primary1",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 1,
-                            "type": "atleast"
-                        },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
+        "campaign_id": "onlyAnd",
+        "expiry_time": "2025-04-08T00:00:00",
+        "trigger": {
+            "primary_condition": {
+                "included_filters": {
+                    "filter_operator": "or",
+                    "filters": [
+                        {
+                            "action_name": "Primary1",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
                         }
-                    }
-                ]
-            }
-        },
-        "secondaryCondition": {
-            "included_filters": {
-                "filterOperator": "and",
-                "filters": [
-                    {
-                        "action_name": "Secondary1",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 0,
-                            "type": "exactly"
+                    ]
+                }
+            },
+            "secondary_condition": {
+                "included_filters": {
+                    "filter_operator": "and",
+                    "filters": [
+                        {
+                            "action_name": "Secondary1",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 0,
+                                "type": "exactly"
+                            },
+                            "primary_time_range": {
+                                "type": "inTheLast",
+                                "value": 3,
+                                "value_type": "relative_past",
+                                "period_unit": "days"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
                         },
-                        "primary_time_range": {
-                            "type": "inTheLast",
-                            "value": 3,
-                            "value_type": "relative_past",
-                            "period_unit": "days"
+                        {
+                            "action_name": "Secondary2",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 0,
+                                "type": "exactly"
+                            },
+                            "primary_time_range": {
+                                "type": "inTheLast",
+                                "value": 3,
+                                "value_type": "relative_past",
+                                "period_unit": "days"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
                         },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
+                        {
+                            "action_name": "Secondary3",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
+                        },
+                        {
+                            "action_name": "Secondary4",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
                         }
-                    },
-                    {
-                        "action_name": "Secondary2",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 0,
-                            "type": "exactly"
-                        },
-                        "primary_time_range": {
-                            "type": "inTheLast",
-                            "value": 3,
-                            "value_type": "relative_past",
-                            "period_unit": "days"
-                        },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
-                        }
-                    },
-                    {
-                        "action_name": "Secondary3",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 1,
-                            "type": "atleast"
-                        },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
-                        }
-                    },
-                    {
-                        "action_name": "Secondary4",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 1,
-                            "type": "atleast"
-                        },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
-                        }
-                    }
-                ]
+                    ]
+                }
             }
         }
     }
 ]
+

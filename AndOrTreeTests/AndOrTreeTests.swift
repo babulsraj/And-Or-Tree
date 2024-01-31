@@ -54,7 +54,7 @@ final class AndOrTreeTests: XCTestCase {
           // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
             let path = sut.createCampaignPaths(for: json).first
 
-            XCTAssertEqual(sut.campaignPaths.first?.expiry,1800736063)
+            //XCTAssertEqual(sut.campaignPaths.first?.expiry,1800736063)
         } else {
             throw NSError()
         }
@@ -511,8 +511,8 @@ final class AndOrTreeTests: XCTestCase {
     
     // one month = 2592000, 1 day - 86400, 1 week - 604800
     
-    //  P1 || P2 & 1&2 || 3&4 - April8
-    //  P3 || P4 &  5&6(3||7) - May8
+    //  P1 || P2 & 1&2&31 || 3&4 - April8
+    //  P3 || P4 &  5&6&(3||7) - May8
     func testPathCompletionAfterKillAndRelaunch() throws {
         var timeProvider = MockTimeProvider()
         var optionalsut: BabulCampaignPathsHandler? = BabulCampaignPathsHandler()

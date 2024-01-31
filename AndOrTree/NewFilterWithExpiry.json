@@ -1,109 +1,112 @@
 [
     {
-        "campaignId": "expiryMay15",
-        "expiry":1715774400,
-        "primaryCondition": {
-            "included_filters": {
-                "filterOperator": "or",
-                "filters": [
-                    {
-                        "action_name": "Primary1NF",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 1,
-                            "type": "atleast"
-                        },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
-                        }
-                    }
-                ]
-            }
-        },
-        "secondaryCondition": {
-            "included_filters": {
-                "filterOperator": "and",
-                "filters": [
-                    {
-                        "action_name": "Secondary1NF",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 0,
-                            "type": "exactly"
-                        },
-                        "primary_time_range": {
-                            "type": "inTheLast",
-                            "value": 3,
-                            "value_type": "relative_past",
-                            "period_unit": "days"
-                        },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
-                        }
-                    },
-                    {
-                        "action_name": "Secondary2NF",
-                        "executed": true,
-                        "filter_type": "actions",
-                        "execution": {
-                            "count": 0,
-                            "type": "exactly"
-                        },
-                        "primary_time_range": {
-                            "type": "inTheLast",
-                            "value": 3,
-                            "value_type": "relative_past",
-                            "period_unit": "days"
-                        },
-                        "attributes": {
-                            "filterOperator": "and",
-                            "filters": []
-                        }
-                    },
-                    {
-                        "filterOperator": "or",
-                        "filter_type": "nested_filters",
-                        "filters": [
-                            {
-                                "action_name": "Secondary3NF",
-                                "executed": true,
-                                "filter_type": "actions",
-                                "execution": {
-                                    "count": 1,
-                                    "type": "atleast"
-                                },
-                                "attributes": {
-                                    "filterOperator": "and",
-                                    "filters": []
-                                }
+        "campaign_id": "expiryMay15",
+        "expiry_time": "2024-05-15T00:00:00",
+        "trigger": {
+            "primary_condition": {
+                "included_filters": {
+                    "filter_operator": "or",
+                    "filters": [
+                        {
+                            "action_name": "Primary1NF",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 1,
+                                "type": "atleast"
                             },
-                            {
-                                "action_name": "Secondary4NF",
-                                "executed": true,
-                                "filter_type": "actions",
-                                "execution": {
-                                    "count": 1,
-                                    "type": "atleast"
-                                },
-                                "primary_time_range": {
-                                    "type": "inTheLast",
-                                    "value": 3,
-                                    "value_type": "relative_past",
-                                    "period_unit": "days"
-                                },
-                                "attributes": {
-                                    "filterOperator": "and",
-                                    "filters": []
-                                }
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
                             }
-                        ]
-                    }
-                ]
+                        }
+                    ]
+                }
+            },
+            "secondary_condition": {
+                "included_filters": {
+                    "filter_operator": "and",
+                    "filters": [
+                        {
+                            "action_name": "Secondary1NF",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 0,
+                                "type": "exactly"
+                            },
+                            "primary_time_range": {
+                                "type": "inTheLast",
+                                "value": 3,
+                                "value_type": "relative_past",
+                                "period_unit": "days"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
+                        },
+                        {
+                            "action_name": "Secondary2NF",
+                            "executed": true,
+                            "filter_type": "actions",
+                            "execution": {
+                                "count": 0,
+                                "type": "exactly"
+                            },
+                            "primary_time_range": {
+                                "type": "inTheLast",
+                                "value": 3,
+                                "value_type": "relative_past",
+                                "period_unit": "days"
+                            },
+                            "attributes": {
+                                "filter_operator": "and",
+                                "filters": []
+                            }
+                        },
+                        {
+                            "filter_operator": "or",
+                            "filter_type": "nested_filters",
+                            "filters": [
+                                {
+                                    "action_name": "Secondary3NF",
+                                    "executed": true,
+                                    "filter_type": "actions",
+                                    "execution": {
+                                        "count": 1,
+                                        "type": "atleast"
+                                    },
+                                    "attributes": {
+                                        "filter_operator": "and",
+                                        "filters": []
+                                    }
+                                },
+                                {
+                                    "action_name": "Secondary4NF",
+                                    "executed": true,
+                                    "filter_type": "actions",
+                                    "execution": {
+                                        "count": 1,
+                                        "type": "atleast"
+                                    },
+                                    "primary_time_range": {
+                                        "type": "inTheLast",
+                                        "value": 3,
+                                        "value_type": "relative_past",
+                                        "period_unit": "days"
+                                    },
+                                    "attributes": {
+                                        "filter_operator": "and",
+                                        "filters": []
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
             }
         }
     }
 ]
+
