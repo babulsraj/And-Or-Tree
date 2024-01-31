@@ -35,6 +35,19 @@ final class AndOrTreeTests: XCTestCase {
         }
     }
     
+    func testFormPath1() throws {
+        
+        if let json = TestUtil.parseJson(fileName: "ActualJson") {
+          // let paths = ConditionEvaluator().buildPathFromJson(jsonPath: json)
+            let path  = sut.createCampaignPaths(for: json)
+
+            XCTAssertEqual(sut.getAllPrimaryEvents(), Set(["Event"]))
+            XCTAssertEqual(sut.getAllSecondaryEvents(), Set(["Add To Cart"]))
+        } else {
+            throw NSError()
+        }
+    }
+    
     func testFormPathMeta() throws {
         
         if let json = TestUtil.parseJson(fileName: "NewFilter") {

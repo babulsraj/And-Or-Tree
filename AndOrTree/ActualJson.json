@@ -1,0 +1,88 @@
+[
+        {
+            "trigger": {
+                "primary_condition": {
+                    "included_filters": {
+                        "filters": [
+                            {
+                                "executed": true,
+                                "execution": {
+                                    "count": 1,
+                                    "type": "atleast"
+                                },
+                                "action_name": "Event",
+                                "attributes": {
+                                    "filter_operator": "and",
+                                    "filters": []
+                                },
+                                "filter_type": "actions"
+                            }
+                        ],
+                        "filter_operator": "or"
+                    }
+                },
+                "secondary_condition": {
+                    "included_filters": {
+                        "filters": [
+                            {
+                                "executed": true,
+                                "execution": {
+                                    "count": 1,
+                                    "type": "atleast"
+                                },
+                                "action_name": "Add To Cart",
+                                "attributes": {
+                                    "filter_operator": "and",
+                                    "filters": []
+                                },
+                                "filter_type": "actions"
+                            }
+                        ],
+                        "filter_operator": "and"
+                    }
+                },
+                "trigger_wait_time": {
+                    "wait_period": 300,
+                    "unit": "seconds"
+                }
+            },
+            "delivery": {
+                "persistent": true,
+                "dismiss_interval": -1,
+                "priority": 3,
+                "fc_meta": {
+                    "delay": 0,
+                    "count": -1,
+                    "ignore_global_delay": true
+                }
+            },
+            "expiry_time": "2024-01-31T13:04:00",
+            "updated_time": "2024-01-31T06:04:25",
+            "template_type": "POP_UP",
+            "campaign_id": "65b9e2e9b15b1a98a307aa64",
+            "campaign_name": "iosInApp<::>0<::>1",
+            "status": "ACTIVE",
+            "user_in_segment": true,
+            "campaign_type": "MOBILE_INAPP",
+            "campaign_sub_type": "general",
+            "campaign_context": {
+                "cid": "65b9e2e9b15b1a98a307aa64_F_T_IA_AB_1_P_0_L_0",
+                "campaign_name": "iosInApp",
+                "moe_locale_name": "Default",
+                "moe_locale_id": "0",
+                "moe_variation_id": "1"
+            },
+            "inapp_type": "NATIVE",
+            "orientations": [
+                "PORTRAIT"
+            ],
+            "display": {
+                "config": {
+                    "cancellable": true
+                },
+                "rules": {
+                    "contexts": []
+                }
+            }
+        }
+    ]

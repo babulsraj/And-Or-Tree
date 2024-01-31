@@ -27,6 +27,7 @@
 		C07ED7BB2B53E71B0027AA67 /* filtersCobinedHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7BA2B53E71B0027AA67 /* filtersCobinedHNE.json */; };
 		C07ED7BD2B53F9A70027AA67 /* filtersANDHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7BC2B53F9A70027AA67 /* filtersANDHNE.json */; };
 		C07ED7BF2B548DAC0027AA67 /* filtersORHNE.json in Resources */ = {isa = PBXBuildFile; fileRef = C07ED7BE2B548DAB0027AA67 /* filtersORHNE.json */; };
+		C0A62A1C2B6AA125006C55A4 /* ActualJson.json in Resources */ = {isa = PBXBuildFile; fileRef = C0A62A1B2B6AA125006C55A4 /* ActualJson.json */; };
 		D61DE4FE2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE4FD2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */; };
 		D61DE5002B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE4FF2B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */; };
 		D61DE5022B55459B001AD764 /* MoEngageTriggerPathBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DE5012B55459B001AD764 /* MoEngageTriggerPathBuilder.swift */; };
@@ -84,6 +85,7 @@
 		C07ED7BA2B53E71B0027AA67 /* filtersCobinedHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersCobinedHNE.json; path = AndOrTree/filtersCobinedHNE.json; sourceTree = SOURCE_ROOT; };
 		C07ED7BC2B53F9A70027AA67 /* filtersANDHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersANDHNE.json; path = AndOrTree/filtersANDHNE.json; sourceTree = SOURCE_ROOT; };
 		C07ED7BE2B548DAB0027AA67 /* filtersORHNE.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = filtersORHNE.json; path = AndOrTree/filtersORHNE.json; sourceTree = SOURCE_ROOT; };
+		C0A62A1B2B6AA125006C55A4 /* ActualJson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ActualJson.json; path = AndOrTree/ActualJson.json; sourceTree = SOURCE_ROOT; };
 		D61DE4FD2B5510A2001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageTriggerEvaluatorInteractor.swift; sourceTree = "<group>"; };
 		D61DE4FF2B553576001AD764 /* MoEngageTriggerEvaluatorInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageTriggerEvaluatorInteractor.swift; sourceTree = "<group>"; };
 		D61DE5012B55459B001AD764 /* MoEngageTriggerPathBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoEngageTriggerPathBuilder.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 		C06CE71E2B1B43FD0026CAFC /* AndOrTreeTests */ = {
 			isa = PBXGroup;
 			children = (
+				C0A62A1B2B6AA125006C55A4 /* ActualJson.json */,
 				D61DE5532B61196B001AD764 /* ExpiryCheck.json */,
 				D61DE5552B61A8C5001AD764 /* CombinedWithExpiry.json */,
 				D61DE5572B6265A2001AD764 /* NewFilterWithExpiry.json */,
@@ -336,6 +339,7 @@
 				C07ED7392B4D627E0027AA67 /* filters11.json in Resources */,
 				D61DE5522B5EEFB6001AD764 /* filtersORAndHNE.json in Resources */,
 				D61DE55A2B6665E6001AD764 /* CombinedWithExpiryHNE.json in Resources */,
+				C0A62A1C2B6AA125006C55A4 /* ActualJson.json in Resources */,
 				D61DE5442B594DF1001AD764 /* NewFilter.json in Resources */,
 				C07ED7BD2B53F9A70027AA67 /* filtersANDHNE.json in Resources */,
 				D61DE5472B5B198A001AD764 /* test.json in Resources */,

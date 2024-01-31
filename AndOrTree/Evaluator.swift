@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol BabulConditionEvaluatorDelegateProtocol {
-   func  didFinishTriggerConditionValidation(for campaign: String, with result: Result<BabulTriggerConditionValidationResult,Error>)
+    func  didFinishTriggerConditionValidation(for campaign: String, with result: Result<BabulTriggerConditionValidationResult,Error>)
 }
 
 public protocol BabulConditionEvaluator {
@@ -20,8 +20,8 @@ public protocol BabulConditionEvaluator {
 }
 
 /// The `BabulTriggerEvaluator` class is responsible for handling the evaluation and management of campaign paths.
-
-@objc public class BabulTriggerEvaluator: NSObject {
+@objcMembers
+public class BabulTriggerEvaluator: NSObject {
     
     /// The internal handler for managing Babul campaign paths.
     private let campaignsPathHandler: BabulCampaignPathsHandler = BabulCampaignPathsHandler()
@@ -31,8 +31,8 @@ public protocol BabulConditionEvaluator {
     /// - Parameters:
     ///   - campaigns: An array of dictionaries containing campaign information.
     /// - Returns: A set of `BabulCampaignPath` objects representing the created campaign paths.
-    @objc func createCampaignPaths(for campaigns: [[String: Any]])  {
-         campaignsPathHandler.createCampaignPaths(for: campaigns)
+    func createCampaignPaths(for campaigns: [[String: Any]])  {
+        campaignsPathHandler.createCampaignPaths(for: campaigns)
     }
     
     /// Evaluates conditions for a given event and attributes, returning the corresponding campaign IDs.
@@ -41,12 +41,12 @@ public protocol BabulConditionEvaluator {
     ///   - event: The name of the event to evaluate conditions for.
     ///   - attributes: A dictionary containing attributes related to the event.
     /// - Returns: An array of campaign IDs that match the specified conditions.
-    @objc func evaluateConditions(for event: String, attributes: [String: Any]) -> [String]? {
+    func evaluateConditions(for event: String, attributes: [String: Any]) -> [String]? {
         return campaignsPathHandler.evaluateConditions(for: event, attributes: attributes)
     }
     
     /// Refreshes campaign paths, allowing for the reset or deletion of expired paths.
-    @objc func refreshPaths() {
+    func refreshPaths() {
         // Implementation can be added to reset or delete expired paths.
     }
     

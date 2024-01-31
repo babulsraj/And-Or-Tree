@@ -20,11 +20,11 @@ class BabulTriggerPathBuilder {
     /// - Returns: A set of campaign path nodes if successfully built, otherwise `nil`.
     func buildCompletePath(for id: String, with json: [String:Any]) -> Set<BabulCampaignPathNode>? {
         
-        guard let aa = json["primaryCondition"] as? [String:Any], let bb = aa["included_filters"] as? [String:Any] else {return nil}
-        guard let cc = formCampaignPath(for: id, inputJson: bb, conditionType: .primary) else {return nil}
+        guard let triggers = json["trigger"] as? [String:Any],  let primaryCondition = triggers["primary_condition"] as? [String:Any], let filters = primaryCondition["included_filters"] as? [String:Any] else {return nil}
+        guard let cc = formCampaignPath(for: id, inputJson: filters, conditionType: .primary) else {return nil}
         
-        guard let pp = json["secondaryCondition"] as? [String:Any], let qq = pp["included_filters"] as? [String:Any] else {return cc}
-        guard let rr = formCampaignPath(for: id, inputJson: qq, conditionType: .secondary) else {return cc}
+        guard let secondaryCondition = triggers["secondary_condition"] as? [String:Any], let filters = secondaryCondition["included_filters"] as? [String:Any] else {return cc}
+        guard let rr = formCampaignPath(for: id, inputJson: filters, conditionType: .secondary) else {return cc}
         
         return joinNodesWithAND(node1: cc, node2: rr)
     }
@@ -37,7 +37,7 @@ class BabulTriggerPathBuilder {
     ///   - conditionType: The type of condition (primary or secondary).
     /// - Returns: A set of campaign path nodes if successfully formed, otherwise `nil`.
     private func formCampaignPath(for id: String, inputJson: [String:Any], conditionType: BabulConditionType) -> Set<BabulCampaignPathNode>? {
-        guard let _ = inputJson["filterOperator"] else {
+        guard let _ = inputJson["filter_operator"] else {
             guard let eventName = inputJson["action_name"] as? String, let attributes = inputJson["attributes"] as? [String:Any] else {return nil}
             let hasExecuted: BabulEventType = (inputJson["executed"] as? Bool ?? true) ? .hasExcecuted : .hasNotExcecuted
             let node = BabulCampaignPathNode(eventName: eventName, eventType: hasExecuted, conditionType: conditionType ,attributes: attributes)
@@ -46,7 +46,7 @@ class BabulTriggerPathBuilder {
             return  Set([node])
         }
         
-        guard let filterOperator = inputJson["filterOperator"] as? String else {return nil}
+        guard let filterOperator = inputJson["filter_operator"] as? String else {return nil}
         guard let filters = inputJson["filters"] as? [[String:Any]] else {return nil}
         var eventPath = Set([BabulCampaignPathNode]())
         

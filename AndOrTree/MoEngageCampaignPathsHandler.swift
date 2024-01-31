@@ -37,7 +37,7 @@ class BabulCampaignPathsHandler {
     @discardableResult
     func createCampaignPaths(for campaigns: [[String: Any]]) -> Set<BabulCampaignPath> {
         campaigns.forEach { campaign in
-            guard let campaignId = campaign["campaignId"] as? String else { return }
+            guard let campaignId = getCampaignId(from: campaign) else { return }
             
             if let existingPath = getExistingPath(for: campaignId) {
                 updatePath(existingPath, with: campaign)
@@ -57,8 +57,8 @@ class BabulCampaignPathsHandler {
     ///   - campaign: The dictionary representing the campaign data.
     private func createAndStoreNewPath(for campaignId: String, with campaign: [String: Any]) {
         let campaignPath = BabulCampaignPath(campaignId: campaignId,
-                                             expiry: campaign["expiry"] as? Double ?? 0.0,
-                                             allowedTimeDuration: campaign["limit"] as? Double ?? 0.0,
+                                                expiry: getExpiry(from: campaign) ?? 0,
+                                                allowedTimeDuration: getWaitPeriod(from: campaign) ?? 0,
                                              timeProvider: timeProvider)
         configureCampaignPath(campaignPath, with: campaign)
         savePath(campaignPath)
@@ -316,5 +316,50 @@ class BabulCampaignPathsHandler {
     func getAllSecondaryEvents() -> Set<String> {
         let keysArray: [String] = Array(secondaryEvents.keys)
         return Set(keysArray)
+    }
+    
+    private func getCampaignId(from campaign: [String:Any]?) -> String? {
+        guard let jsonObject = campaign as? [String: Any], let campaignId = jsonObject["campaign_id"] as? String else  {
+            return nil
+        }
+        
+        return campaignId
+    }
+
+    private func getExpiry(from campaign: [String:Any]?) -> Double? {
+        
+        guard let jsonObject = campaign, let expiryTime = jsonObject["expiry_time"] as? String else  {
+            return nil
+        }
+        
+        return getDoubleValue(from: expiryTime)
+    }
+
+    private func getWaitPeriod(from campaign: [String:Any]?) -> Double? {
+        if let jsonObject = campaign {
+            if let trigger = jsonObject["trigger"] as? [String: Any],
+               let triggerWaitTime = trigger["trigger_wait_time"] as? [String: Any],
+               let waitPeriod = triggerWaitTime["wait_period"] as? Double {
+
+                return waitPeriod
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    private func getDoubleValue(from expiryTime: String) -> Double? {
+        let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            if let date = dateFormatter.date(from: expiryTime) {
+                let timestamp = date.timeIntervalSince1970
+                return timestamp
+                print("Expiry Time Timestamp: \(timestamp)")
+            } else {
+                return nil
+                print("Failed to convert expiry time to date")
+            }
     }
 }
